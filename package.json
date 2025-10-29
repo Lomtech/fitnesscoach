@@ -1,0 +1,20 @@
+{
+  "name": "fitness-coach-premium",
+  "version": "1.0.0",
+  "description": "Fitness Coach Premium Platform mit Supabase und Stripe",
+  "main": "index.html",
+  "scripts": {
+    "build": "node build.js",
+    "start": "node build.js && npx http-server dist -p 8000"
+  },
+  "keywords": [
+    "fitness",
+    "supabase",
+    "stripe",
+    "subscription"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

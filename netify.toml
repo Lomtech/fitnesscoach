@@ -1,0 +1,14 @@
+[build]
+  # Build-Kommando (nicht notwendig für reine HTML/CSS/JS, aber wir erstellen ein build.js)
+  command = "node build.js"
+  # Publish-Verzeichnis
+  publish = "dist"
+
+# Redirect-Regeln für SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment Variables werden über Netlify Dashboard gesetzt
+# Siehe NETLIFY-SETUP.md für Anleitung
