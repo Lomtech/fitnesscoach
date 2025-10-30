@@ -1007,12 +1007,14 @@ function updatePricingButtons() {
     if (!currentUser) {
       btn.textContent = "Jetzt starten";
       btn.className = "subscribe-btn btn-primary";
+      btn.disabled = false;
       return;
     }
 
     if (!userSubscription) {
       btn.textContent = "Wählen";
       btn.className = "subscribe-btn btn-primary";
+      btn.disabled = false;
       return;
     }
 
@@ -1070,7 +1072,7 @@ function displayUserInfo() {
       ).toLocaleDateString("de-DE")}</p>
       ${pendingChangeHtml}
       <div style="margin-top: 20px;">
-        <button onclick="showManagePlanSection()" class="btn-primary">
+        <button onclick="showManagePlanSection()" class="btn btn-primary">
           Plan verwalten
         </button>
       </div>
@@ -1095,16 +1097,15 @@ function showManagePlanSection() {
       const level = planHierarchy[plan];
       const isCurrent = plan === currentPlan;
       const isUpgrade = level > currentLevel;
-      const isDowngrade = level < currentLevel;
 
       let buttonHtml = "";
       if (isCurrent) {
         buttonHtml =
-          '<button class="btn-secondary" disabled>Aktueller Plan ✓</button>';
+          '<button class="btn btn-secondary" disabled>Aktueller Plan ✓</button>';
       } else if (isUpgrade) {
-        buttonHtml = `<button class="btn-success" onclick="showChangePlanModal('${plan}'); document.getElementById('managePlanModal').remove();">Upgraden</button>`;
+        buttonHtml = `<button class="btn btn-success" onclick="showChangePlanModal('${plan}'); document.getElementById('managePlanModal').remove();">Upgraden</button>`;
       } else {
-        buttonHtml = `<button class="btn-warning" onclick="showChangePlanModal('${plan}'); document.getElementById('managePlanModal').remove();">Downgrade</button>`;
+        buttonHtml = `<button class="btn btn-warning" onclick="showChangePlanModal('${plan}'); document.getElementById('managePlanModal').remove();">Downgrade</button>`;
       }
 
       return `
@@ -1222,7 +1223,7 @@ function createContentItem(content, type, hasAccess) {
       ${planBadges[content.requiredPlan]}
       ${
         hasAccess
-          ? `<br><a href="${viewerUrl}" class="btn-primary" style="display: inline-block; margin-top: 10px; padding: 0.5rem 1rem; text-decoration: none;">Ansehen</a>`
+          ? `<br><a href="${viewerUrl}" class="btn btn-primary" style="display: inline-block; margin-top: 10px; padding: 0.5rem 1rem; text-decoration: none;">Ansehen</a>`
           : '<p style="color: var(--danger); margin-top: 10px;">Upgrade erforderlich</p>'
       }
     </div>
