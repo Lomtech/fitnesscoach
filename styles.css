@@ -17,12 +17,14 @@
  * 12. CONTENT ITEM (Glass-Card mit Hover-Scaling, Bild, Badge, Zugriffssperre)
  * 13. MODALS (Overlay mit Blur, Slide-In-Animation, Formulare)
  * 14. ALERTS (Success, Error, Warning – Slide-Down-Animation)
- * 15. LOADING STATES (Pulsierende Punkte-Animation)
- * 16. UTILITIES (Text-Center, etc.)
- * 17. ACCESSIBILITY & TOUCH (Tap-Highlight, Min-Height für Buttons)
- * 18. SAFE AREAS (iPhone Notch-Support)
- * 19. REDUCED MOTION (Barrierefreiheit: Animationen deaktivieren)
- * 20. PRINT STYLES (Druck-optimierte Ansicht)
+ * 15. COOKIE BANNER (DSGVO-konform mit Glassmorphism)
+ * 16. FOOTER (Mehrspaltig, responsive, mit Links)
+ * 17. LOADING STATES (Pulsierende Punkte-Animation)
+ * 18. UTILITIES (Text-Center, etc.)
+ * 19. ACCESSIBILITY & TOUCH (Tap-Highlight, Min-Height für Buttons)
+ * 20. SAFE AREAS (iPhone Notch-Support)
+ * 21. REDUCED MOTION (Barrierefreiheit: Animationen deaktivieren)
+ * 22. PRINT STYLES (Druck-optimierte Ansicht)
  */
 
 /* ============================================
@@ -64,13 +66,13 @@
   --glass-border-dark: rgba(255, 255, 255, 0.08);
 
   /* Spacing System (8px base) */
-  --space-xs: 0.5rem; /* 8px */
-  --space-sm: 1rem; /* 16px */
-  --space-md: 1.5rem; /* 24px */
-  --space-lg: 2rem; /* 32px */
-  --space-xl: 3rem; /* 48px */
-  --space-2xl: 4rem; /* 64px */
-  --space-3xl: 6rem; /* 96px */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
 
   /* Typography System */
   --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display",
@@ -474,7 +476,7 @@ nav .container {
 }
 
 .features li::before {
-  content: "Checkmark";
+  content: "✓";
   color: var(--success);
   font-weight: 700;
   margin-right: var(--space-sm);
@@ -504,7 +506,6 @@ nav .container {
 .subscribe-btn:active {
   transform: translateY(0);
 }
-
 /* ============================================
    9. MEMBERS AREA
    >>> GLIEDERUNGSPUNKT 9: MEMBERS AREA
@@ -823,7 +824,9 @@ nav .container {
   font-weight: 500;
 }
 
-.form-group input {
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"] {
   width: 100%;
   padding: 14px 16px;
   border: 1px solid var(--light-gray);
@@ -840,6 +843,33 @@ nav .container {
   border-color: var(--primary);
   background: var(--white);
   box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+}
+
+.checkbox-group {
+  margin-top: var(--space-md);
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: flex-start;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: var(--space-xs);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.checkbox-group a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.checkbox-group a:hover {
+  text-decoration: underline;
 }
 
 .form-link {
@@ -903,8 +933,164 @@ nav .container {
 }
 
 /* ============================================
-   15. LOADING STATES
-   >>> GLIEDERUNGSPUNKT 15: LOADING STATES
+   15. COOKIE BANNER - DSGVO
+   >>> GLIEDERUNGSPUNKT 15: COOKIE BANNER
+   ============================================ */
+
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10001;
+  background: var(--glass-bg);
+  backdrop-filter: saturate(180%) blur(30px);
+  -webkit-backdrop-filter: saturate(180%) blur(30px);
+  border-top: 1px solid var(--glass-border);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+  padding: var(--space-lg);
+  transform: translateY(100%);
+  transition: transform var(--transition-smooth);
+}
+
+.cookie-banner.show {
+  transform: translateY(0);
+}
+
+.cookie-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .cookie-content {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-xl);
+  }
+}
+
+.cookie-text h3 {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--dark-gray);
+  margin-bottom: var(--space-xs);
+}
+
+.cookie-text p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--mid-gray);
+  margin: 0;
+}
+
+.cookie-text a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.cookie-text a:hover {
+  text-decoration: underline;
+}
+
+.cookie-buttons {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .cookie-buttons {
+    flex-direction: column;
+  }
+
+  .cookie-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   16. FOOTER
+   >>> GLIEDERUNGSPUNKT 16: FOOTER
+   ============================================ */
+
+footer {
+  background: var(--glass-bg-dark);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--glass-border-dark);
+  padding: var(--space-2xl) 0 var(--space-lg);
+  margin-top: var(--space-3xl);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .footer-content {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2xl);
+  }
+}
+
+.footer-section h4 {
+  color: var(--white);
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.01em;
+}
+
+.footer-section p {
+  color: var(--mid-gray);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: var(--space-xs);
+}
+
+.footer-links a {
+  color: var(--mid-gray);
+  text-decoration: none;
+  font-size: 15px;
+  transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+  color: var(--white);
+}
+
+.footer-bottom {
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--glass-border-dark);
+  text-align: center;
+}
+
+.footer-bottom p {
+  color: var(--mid-gray);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ============================================
+   17. LOADING STATES
+   >>> GLIEDERUNGSPUNKT 17: LOADING STATES
    ============================================ */
 
 .loading {
@@ -934,8 +1120,8 @@ nav .container {
 }
 
 /* ============================================
-   16. UTILITIES
-   >>> GLIEDERUNGSPUNKT 16: UTILITIES
+   18. UTILITIES
+   >>> GLIEDERUNGSPUNKT 18: UTILITIES
    ============================================ */
 
 .text-center {
@@ -943,8 +1129,8 @@ nav .container {
 }
 
 /* ============================================
-   17. ACCESSIBILITY & TOUCH
-   >>> GLIEDERUNGSPUNKT 17: ACCESSIBILITY & TOUCH
+   19. ACCESSIBILITY & TOUCH
+   >>> GLIEDERUNGSPUNKT 19: ACCESSIBILITY & TOUCH
    ============================================ */
 
 button,
@@ -962,8 +1148,8 @@ a {
 }
 
 /* ============================================
-   18. SAFE AREAS
-   >>> GLIEDERUNGSPUNKT 18: SAFE AREAS
+   20. SAFE AREAS
+   >>> GLIEDERUNGSPUNKT 20: SAFE AREAS
    ============================================ */
 
 @supports (padding: max(0px)) {
@@ -971,11 +1157,15 @@ a {
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
+
+  .cookie-banner {
+    padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
+  }
 }
 
 /* ============================================
-   19. REDUCED MOTION
-   >>> GLIEDERUNGSPUNKT 19: REDUCED MOTION
+   21. REDUCED MOTION
+   >>> GLIEDERUNGSPUNKT 21: REDUCED MOTION
    ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -989,8 +1179,8 @@ a {
 }
 
 /* ============================================
-   20. PRINT STYLES
-   >>> GLIEDERUNGSPUNKT 20: PRINT STYLES
+   22. PRINT STYLES
+   >>> GLIEDERUNGSPUNKT 22: PRINT STYLES
    ============================================ */
 
 @media print {
@@ -998,7 +1188,9 @@ a {
   .modal,
   .tabs,
   .subscribe-btn,
-  .btn {
+  .btn,
+  .cookie-banner,
+  footer {
     display: none;
   }
 

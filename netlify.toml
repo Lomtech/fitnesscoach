@@ -1,14 +1,131 @@
-[build]
-  # Build-Kommando (nicht notwendig für reine HTML/CSS/JS, aber wir erstellen ein build.js)
-  command = "node build.js"
-  # Publish-Verzeichnis
-  publish = "dist"
+# ═══════════════════════════════════════════════════════
+# NETLIFY KONFIGURATION - FittiCoach DSGVO-Edition
+# ═══════════════════════════════════════════════════════
+# Suche im Code nach: "# >>> GLIEDERUNGSPUNKT X: BEZEICHNUNG"
+#
+# 1. BUILD-EINSTELLUNGEN
+# 2. SPA-ROUTING (Single Page Application)
+# 3. SECURITY HEADERS (DSGVO & Best Practices)
+# 4. CACHE HEADERS (Performance-Optimierung)
+# 5. BILD-CACHING (JPG, PNG, WebP)
+# 6. ENVIRONMENT VARIABLES (Dokumentation)
+# 7. ZUSÄTZLICHE REDIRECTS (optional, auskommentiert)
 
-# Redirect-Regeln für SPA
+# ============================================
+# 1. BUILD-EINSTELLUNGEN
+# >>> GLIEDERUNGSPUNKT 1: BUILD-EINSTELLUNGEN
+# ============================================
+[build]
+  publish = "dist"
+  command = "node build.js"
+
+# ============================================
+# 2. SPA-ROUTING
+# >>> GLIEDERUNGSPUNKT 2: SPA-ROUTING
+# ============================================
+# Alle Requests zu index.html umleiten (200 OK für Client-Side-Routing)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Environment Variables werden über Netlify Dashboard gesetzt
-# Siehe NETLIFY-SETUP.md für Anleitung
+# ============================================
+# 3. SECURITY HEADERS
+# >>> GLIEDERUNGSPUNKT 3: SECURITY HEADERS
+# ============================================
+# Allgemeine Security Headers für alle Seiten
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Verhindert Einbettung in iframes (Clickjacking-Schutz)
+    X-Frame-Options = "DENY"
+    
+    # XSS-Schutz aktivieren
+    X-XSS-Protection = "1; mode=block"
+    
+    # MIME-Type-Sniffing verhindern
+    X-Content-Type-Options = "nosniff"
+    
+    # Referrer Policy (Datenschutz)
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Permissions Policy (Zugriff auf Gerätehardware)
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    
+    # Content Security Policy (optional - auskommentiert da es Stripe/Supabase blockieren könnte)
+    # Content-Security-Policy = "default-src 'self'; script-src 'self' https://js.stripe.com https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co https://api.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+
+# ============================================
+# 4. CACHE HEADERS FÜR PERFORMANCE
+# >>> GLIEDERUNGSPUNKT 4: CACHE HEADERS
+# ============================================
+# CSS - 1 Jahr cachen
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# JavaScript - 1 Jahr cachen
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML - Nicht cachen (immer aktuell)
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# ============================================
+# 5. BILD-CACHING
+# >>> GLIEDERUNGSPUNKT 5: BILD-CACHING
+# ============================================
+# Bilder - 1 Jahr cachen
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ============================================
+# 6. ENVIRONMENT VARIABLES (DOKUMENTATION)
+# >>> GLIEDERUNGSPUNKT 6: ENVIRONMENT VARIABLES
+# ============================================
+# Diese werden in der Netlify UI gesetzt unter:
+# Site Settings → Build & Deploy → Environment Variables
+#
+# Benötigte Variables:
+# - SUPABASE_URL
+# - SUPABASE_ANON_KEY
+# - STRIPE_PUBLISHABLE_KEY (optional für Demo-Modus)
+# - STRIPE_PRICE_BASIC (optional)
+# - STRIPE_PRICE_PREMIUM (optional)
+# - STRIPE_PRICE_ELITE (optional)
+
+# ============================================
+# 7. ZUSÄTZLICHE REDIRECTS (OPTIONAL)
+# >>> GLIEDERUNGSPUNKT 7: ZUSÄTZLICHE REDIRECTS
+# ============================================
+# Beispiel: www zu non-www redirect (falls gewünscht)
+# [[redirects]]
+#   from = "https://www.fitticoach.de/*"
+#   to = "https://fitticoach.de/:splat"
+#   status = 301
+#   force = true
+
+# Beispiel: HTTP zu HTTPS redirect (automatisch von Netlify)
+# [[redirects]]
+#   from = "http://fitticoach.de/*"
+#   to = "https://fitticoach.de/:splat"
+#   status = 301
+#   force = true

@@ -25,6 +25,30 @@
     <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsent" class="cookie-banner" style="display: none">
+      <div class="cookie-content">
+        <div class="cookie-text">
+          <h3>🍪 Cookie-Einstellungen</h3>
+          <p>
+            Wir verwenden Cookies, um dir die bestmögliche Erfahrung zu bieten.
+            Essentielle Cookies sind für die Funktion der Website notwendig.
+            Weitere Informationen findest du in unserer
+            <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a>
+            und <a href="cookies.html" target="_blank">Cookie-Richtlinie</a>.
+          </p>
+        </div>
+        <div class="cookie-buttons">
+          <button id="acceptAll" class="btn btn-primary">
+            Alle akzeptieren
+          </button>
+          <button id="acceptEssential" class="btn btn-secondary">
+            Nur Notwendige
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Navigation -->
     <nav>
       <div class="container">
@@ -158,6 +182,41 @@
       </div>
     </section>
 
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>FittiCoach</h4>
+            <p>Premium Fitness Training für deine Ziele</p>
+          </div>
+          <div class="footer-section">
+            <h4>Rechtliches</h4>
+            <ul class="footer-links">
+              <li><a href="impressum.html">Impressum</a></li>
+              <li><a href="datenschutz.html">Datenschutz</a></li>
+              <li><a href="cookies.html">Cookie-Richtlinie</a></li>
+              <li><a href="agb.html">AGB</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Support</h4>
+            <ul class="footer-links">
+              <li>
+                <a href="mailto:support@fitticoach.de">support@fitticoach.de</a>
+              </li>
+              <li>
+                <a href="#" id="openCookieSettings">Cookie-Einstellungen</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 FittiCoach. Alle Rechte vorbehalten.</p>
+        </div>
+      </div>
+    </footer>
+
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
       <div class="modal-content">
@@ -206,6 +265,16 @@
               minlength="6"
             />
           </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" id="acceptPrivacy" required />
+              Ich akzeptiere die
+              <a href="datenschutz.html" target="_blank"
+                >Datenschutzerklärung</a
+              >
+              und <a href="agb.html" target="_blank">AGB</a>
+            </label>
+          </div>
           <button type="submit" class="btn btn-primary" style="width: 100%">
             Registrieren
           </button>
@@ -232,6 +301,18 @@
           <button type="submit" class="btn btn-primary" style="width: 100%">
             Zur Zahlung
           </button>
+          <p
+            style="
+              font-size: 13px;
+              color: #999;
+              text-align: center;
+              margin-top: 1rem;
+            "
+          >
+            Mit dem Abschluss akzeptierst du unsere
+            <a href="agb.html" target="_blank">AGB</a> und
+            <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a>.
+          </p>
         </form>
       </div>
     </div>

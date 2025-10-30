@@ -5,15 +5,16 @@
 //
 // 1. KONFIGURATION (Supabase & Stripe)
 // 2. GLOBALE VARIABLEN & HILFSFUNKTIONEN
-// 3. DEMO-INHALTE & PLAN-HIERARCHIE
-// 4. INITIALISIERUNG (DOMContentLoaded)
-// 5. AUTHENTIFIZIERUNG (Session & Subscription laden)
-// 6. EVENT LISTENERS (Navigation, Modals, Forms, Tabs)
-// 7. LOGIN & REGISTRATION (handleLogin, handleRegister, logout)
-// 8. SUBSCRIPTION & PAYMENT (Klicken, Modal, Stripe/Demo-Zahlung)
-// 9. UI-UPDATES (angemeldet/abgemeldet, User-Info)
-// 10. CONTENT MANAGEMENT (Laden, Zugriffsprüfung, Item-Erstellung, Tab-Wechsel)
-// 11. UTILITY FUNCTIONS (Modal, Alert)
+// 3. COOKIE-CONSENT & DSGVO
+// 4. DEMO-INHALTE & PLAN-HIERARCHIE
+// 5. INITIALISIERUNG (DOMContentLoaded)
+// 6. AUTHENTIFIZIERUNG (Session & Subscription laden)
+// 7. EVENT LISTENERS (Navigation, Modals, Forms, Tabs, Cookie)
+// 8. LOGIN & REGISTRATION (handleLogin, handleRegister, logout)
+// 9. SUBSCRIPTION & PAYMENT (Klicken, Modal, Stripe/Demo-Zahlung)
+// 10. UI-UPDATES (angemeldet/abgemeldet, User-Info)
+// 11. CONTENT MANAGEMENT (Laden, Zugriffsprüfung, Item-Erstellung, Tab-Wechsel)
+// 12. UTILITY FUNCTIONS (Modal, Alert)
 
 // ============================================
 // 1. KONFIGURATION (Supabase & Stripe)
@@ -56,7 +57,7 @@ if (
   SUPABASE_ANON_KEY === "DEIN_SUPABASE_ANON_KEY"
 ) {
   console.error(
-    "FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!"
+    "❌ FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!"
   );
   alert(
     "FEHLER: Supabase-Credentials fehlen! Bitte siehe app.js und README.md"
@@ -78,8 +79,122 @@ let currentUser = null;
 let userSubscription = null;
 
 // ============================================
-// 3. DEMO-INHALTE & PLAN-HIERARCHIE
-// >>> GLIEDERUNGSPUNKT 3: DEMO-INHALTE & PLAN-HIERARCHIE
+// 3. COOKIE-CONSENT & DSGVO
+// >>> GLIEDERUNGSPUNKT 3: COOKIE-CONSENT & DSGVO
+// ============================================
+
+/**
+ * Cookie-Consent Verwaltung
+ */
+const CookieConsent = {
+  // Cookie-Namen
+  CONSENT_COOKIE: "fitticoach_cookie_consent",
+  CONSENT_EXPIRY_DAYS: 365,
+
+  /**
+   * Prüft ob Cookie-Zustimmung vorhanden ist
+   */
+  hasConsent() {
+    return localStorage.getItem(this.CONSENT_COOKIE) !== null;
+  },
+
+  /**
+   * Gibt die Zustimmung zurück
+   */
+  getConsent() {
+    const consent = localStorage.getItem(this.CONSENT_COOKIE);
+    return consent ? JSON.parse(consent) : null;
+  },
+
+  /**
+   * Speichert die Zustimmung
+   */
+  setConsent(analytics = false, marketing = false) {
+    const consent = {
+      essential: true, // Immer true
+      analytics: analytics,
+      marketing: marketing,
+      timestamp: new Date().toISOString(),
+    };
+    localStorage.setItem(this.CONSENT_COOKIE, JSON.stringify(consent));
+    debugLog("✅ Cookie-Zustimmung gespeichert:", consent);
+  },
+
+  /**
+   * Zeigt Cookie-Banner an
+   */
+  showBanner() {
+    const banner = document.getElementById("cookieConsent");
+    if (banner) {
+      banner.style.display = "block";
+      // Animation
+      setTimeout(() => {
+        banner.classList.add("show");
+      }, 100);
+    }
+  },
+
+  /**
+   * Versteckt Cookie-Banner
+   */
+  hideBanner() {
+    const banner = document.getElementById("cookieConsent");
+    if (banner) {
+      banner.classList.remove("show");
+      setTimeout(() => {
+        banner.style.display = "none";
+      }, 300);
+    }
+  },
+
+  /**
+   * Prüft ob Analytics erlaubt ist
+   */
+  canUseAnalytics() {
+    const consent = this.getConsent();
+    return consent && consent.analytics;
+  },
+
+  /**
+   * Prüft ob Marketing erlaubt ist
+   */
+  canUseMarketing() {
+    const consent = this.getConsent();
+    return consent && consent.marketing;
+  },
+
+  /**
+   * Initialisiert Cookie-Consent
+   */
+  init() {
+    if (!this.hasConsent()) {
+      this.showBanner();
+    } else {
+      debugLog("ℹ️ Cookie-Zustimmung bereits vorhanden");
+      // Optionale Analytics laden wenn erlaubt
+      if (this.canUseAnalytics()) {
+        this.loadAnalytics();
+      }
+    }
+  },
+
+  /**
+   * Lädt Analytics (nur wenn Zustimmung vorhanden)
+   */
+  loadAnalytics() {
+    debugLog("📊 Analytics wird geladen (Zustimmung vorhanden)");
+    // Hier Google Analytics, Matomo etc. laden
+    // Beispiel:
+    // window.dataLayer = window.dataLayer || [];
+    // function gtag(){dataLayer.push(arguments);}
+    // gtag('js', new Date());
+    // gtag('config', 'GA_MEASUREMENT_ID');
+  },
+};
+
+// ============================================
+// 4. DEMO-INHALTE & PLAN-HIERARCHIE
+// >>> GLIEDERUNGSPUNKT 4: DEMO-INHALTE & PLAN-HIERARCHIE
 // ============================================
 const demoContent = {
   videos: [
@@ -206,51 +321,58 @@ const planHierarchy = {
 };
 
 // ============================================
-// 4. INITIALISIERUNG (DOMContentLoaded)
-// >>> GLIEDERUNGSPUNKT 4: INITIALISIERUNG
+// 5. INITIALISIERUNG (DOMContentLoaded)
+// >>> GLIEDERUNGSPUNKT 5: INITIALISIERUNG
 // ============================================
 document.addEventListener("DOMContentLoaded", async () => {
+  // Cookie-Consent initialisieren
+  CookieConsent.init();
+
   // Debug: Zeige Stripe Key
-  debugLog("STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
+  debugLog("🔑 STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
   debugLog(
-    "Ist Platzhalter?",
+    "🔑 Ist Platzhalter?",
     STRIPE_PUBLISHABLE_KEY === "DEIN_STRIPE_PUBLISHABLE_KEY"
   );
 
   // Prüfe ob Stripe.js geladen wurde
-  debugLog("Stripe Objekt verfügbar?", typeof Stripe !== "undefined");
+  debugLog("🔍 Stripe Objekt verfügbar?", typeof Stripe !== "undefined");
 
-  // Initialisiere Stripe
-  if (STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY") {
-    debugLog("Stripe Key ist gesetzt, versuche zu initialisieren...");
+  // Initialisiere Stripe nur wenn Cookie-Zustimmung vorhanden
+  if (CookieConsent.hasConsent()) {
+    if (STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY") {
+      debugLog("✅ Stripe Key ist gesetzt, versuche zu initialisieren...");
 
-    if (typeof Stripe === "undefined") {
-      console.error(
-        "Stripe.js Bibliothek nicht geladen! Prüfe index.html <script> Tag"
-      );
-      showAlert(
-        "Stripe.js konnte nicht geladen werden. Bitte Seite neu laden.",
-        "error"
-      );
-    } else {
-      try {
-        stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-        debugLog("Stripe erfolgreich initialisiert:", stripe);
-        console.log("Stripe ist bereit für Zahlungen!");
-      } catch (error) {
-        console.error("Stripe Initialisierungsfehler:", error);
-        console.error("Key:", STRIPE_PUBLISHABLE_KEY);
+      if (typeof Stripe === "undefined") {
+        console.error(
+          "❌ Stripe.js Bibliothek nicht geladen! Prüfe index.html <script> Tag"
+        );
         showAlert(
-          "Stripe konnte nicht geladen werden. Zahlungen sind deaktiviert.",
+          "Stripe.js konnte nicht geladen werden. Bitte Seite neu laden.",
           "error"
         );
+      } else {
+        try {
+          stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+          debugLog("✅ Stripe erfolgreich initialisiert:", stripe);
+          console.log("✅ Stripe ist bereit für Zahlungen!");
+        } catch (error) {
+          console.error("❌ Stripe Initialisierungsfehler:", error);
+          console.error("❌ Key:", STRIPE_PUBLISHABLE_KEY);
+          showAlert(
+            "Stripe konnte nicht geladen werden. Zahlungen sind deaktiviert.",
+            "error"
+          );
+        }
       }
+    } else {
+      console.warn(
+        "⚠️ Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
+      );
+      console.warn("⚠️ Aktueller Wert:", STRIPE_PUBLISHABLE_KEY);
     }
   } else {
-    console.warn(
-      "Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
-    );
-    console.warn("Aktueller Wert:", STRIPE_PUBLISHABLE_KEY);
+    console.log("ℹ️ Stripe-Initialisierung wartet auf Cookie-Zustimmung");
   }
 
   await checkUserSession();
@@ -258,8 +380,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ============================================
-// 5. AUTHENTIFIZIERUNG (Session & Subscription laden)
-// >>> GLIEDERUNGSPUNKT 5: AUTHENTIFIZIERUNG
+// 6. AUTHENTIFIZIERUNG (Session & Subscription laden)
+// >>> GLIEDERUNGSPUNKT 6: AUTHENTIFIZIERUNG
 // ============================================
 async function checkUserSession() {
   const {
@@ -289,19 +411,29 @@ async function loadUserSubscription() {
 }
 
 // ============================================
-// 6. EVENT LISTENERS (Navigation, Modals, Forms, Tabs)
-// >>> GLIEDERUNGSPUNKT 6: EVENT LISTENERS
+// 7. EVENT LISTENERS (Navigation, Modals, Forms, Tabs, Cookie)
+// >>> GLIEDERUNGSPUNKT 7: EVENT LISTENERS
 // ============================================
 function initializeEventListeners() {
   // Navigation
-  document.getElementById("loginBtn").addEventListener("click", () => {
-    showModal("loginModal");
-  });
+  const loginBtn = document.getElementById("loginBtn");
+  if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+      showModal("loginModal");
+    });
+  }
 
-  document.getElementById("logoutBtn").addEventListener("click", logout);
-  document.getElementById("ctaBtn").addEventListener("click", () => {
-    document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
-  });
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+  }
+
+  const ctaBtn = document.getElementById("ctaBtn");
+  if (ctaBtn) {
+    ctaBtn.addEventListener("click", () => {
+      document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
+    });
+  }
 
   // Modal Controls
   document.querySelectorAll(".close").forEach((closeBtn) => {
@@ -317,26 +449,39 @@ function initializeEventListeners() {
   });
 
   // Auth Forms
-  document.getElementById("loginForm").addEventListener("submit", handleLogin);
-  document
-    .getElementById("registerForm")
-    .addEventListener("submit", handleRegister);
-  document
-    .getElementById("paymentForm")
-    .addEventListener("submit", handlePayment);
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", handleLogin);
+  }
+
+  const registerForm = document.getElementById("registerForm");
+  if (registerForm) {
+    registerForm.addEventListener("submit", handleRegister);
+  }
+
+  const paymentForm = document.getElementById("paymentForm");
+  if (paymentForm) {
+    paymentForm.addEventListener("submit", handlePayment);
+  }
 
   // Switch between Login/Register
-  document.getElementById("showRegister").addEventListener("click", (e) => {
-    e.preventDefault();
-    hideModal("loginModal");
-    showModal("registerModal");
-  });
+  const showRegisterLink = document.getElementById("showRegister");
+  if (showRegisterLink) {
+    showRegisterLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      hideModal("loginModal");
+      showModal("registerModal");
+    });
+  }
 
-  document.getElementById("showLogin").addEventListener("click", (e) => {
-    e.preventDefault();
-    hideModal("registerModal");
-    showModal("loginModal");
-  });
+  const showLoginLink = document.getElementById("showLogin");
+  if (showLoginLink) {
+    showLoginLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      hideModal("registerModal");
+      showModal("loginModal");
+    });
+  }
 
   // Subscribe buttons
   document.querySelectorAll(".subscribe-btn").forEach((btn) => {
@@ -350,11 +495,62 @@ function initializeEventListeners() {
       switchTab(tabName);
     });
   });
+
+  // Cookie Consent Buttons
+  const acceptAllBtn = document.getElementById("acceptAll");
+  if (acceptAllBtn) {
+    acceptAllBtn.addEventListener("click", () => {
+      CookieConsent.setConsent(true, true);
+      CookieConsent.hideBanner();
+      showAlert("✅ Alle Cookies akzeptiert", "success");
+
+      // Stripe initialisieren wenn noch nicht geschehen
+      if (
+        !stripe &&
+        STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY" &&
+        typeof Stripe !== "undefined"
+      ) {
+        stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        debugLog("✅ Stripe nach Cookie-Zustimmung initialisiert");
+      }
+
+      // Analytics laden
+      CookieConsent.loadAnalytics();
+    });
+  }
+
+  const acceptEssentialBtn = document.getElementById("acceptEssential");
+  if (acceptEssentialBtn) {
+    acceptEssentialBtn.addEventListener("click", () => {
+      CookieConsent.setConsent(false, false);
+      CookieConsent.hideBanner();
+      showAlert("✅ Nur notwendige Cookies akzeptiert", "success");
+
+      // Stripe initialisieren (essential für Zahlung)
+      if (
+        !stripe &&
+        STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY" &&
+        typeof Stripe !== "undefined"
+      ) {
+        stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        debugLog("✅ Stripe nach Cookie-Zustimmung initialisiert");
+      }
+    });
+  }
+
+  // Cookie-Einstellungen im Footer
+  const openCookieSettings = document.getElementById("openCookieSettings");
+  if (openCookieSettings) {
+    openCookieSettings.addEventListener("click", (e) => {
+      e.preventDefault();
+      CookieConsent.showBanner();
+    });
+  }
 }
 
 // ============================================
-// 7. LOGIN & REGISTRATION (handleLogin, handleRegister, logout)
-// >>> GLIEDERUNGSPUNKT 7: LOGIN & REGISTRATION
+// 8. LOGIN & REGISTRATION (handleLogin, handleRegister, logout)
+// >>> GLIEDERUNGSPUNKT 8: LOGIN & REGISTRATION
 // ============================================
 async function handleLogin(e) {
   e.preventDefault();
@@ -372,12 +568,12 @@ async function handleLogin(e) {
   debugLog("Login-Antwort:", { data, error });
 
   if (error) {
-    console.error("Login error:", error);
+    console.error("❌ Login error:", error);
     showAlert("Anmeldung fehlgeschlagen: " + error.message, "error");
     return;
   }
 
-  debugLog("Login erfolgreich!");
+  debugLog("✅ Login erfolgreich!");
   currentUser = data.user;
   await loadUserSubscription();
   updateUIForLoggedInUser();
@@ -391,12 +587,20 @@ async function handleRegister(e) {
   const name = document.getElementById("registerName").value;
   const email = document.getElementById("registerEmail").value;
   const password = document.getElementById("registerPassword").value;
+  const acceptPrivacy = document.getElementById("acceptPrivacy").checked;
 
   debugLog("Registrierungsversuch:", {
     name,
     email,
     passwordLength: password.length,
+    acceptPrivacy,
   });
+
+  // Validierung
+  if (!acceptPrivacy) {
+    showAlert("Bitte akzeptiere die Datenschutzerklärung und AGB", "error");
+    return;
+  }
 
   if (password.length < 6) {
     showAlert("Passwort muss mindestens 6 Zeichen lang sein", "error");
@@ -412,6 +616,8 @@ async function handleRegister(e) {
       options: {
         data: {
           full_name: name,
+          privacy_accepted: true,
+          privacy_accepted_at: new Date().toISOString(),
         },
         emailRedirectTo: window.location.origin,
       },
@@ -420,7 +626,7 @@ async function handleRegister(e) {
     debugLog("Supabase Antwort:", { data, error });
 
     if (error) {
-      console.error("Registration error:", error);
+      console.error("❌ Registration error:", error);
       console.error("Error details:", {
         message: error.message,
         status: error.status,
@@ -434,15 +640,17 @@ async function handleRegister(e) {
         );
       } else if (error.message.includes("Database error")) {
         showAlert(
-          "Datenbankfehler! Bitte öffne die Browser-Konsole (F12) für Details.",
+          "❌ Datenbankfehler! Bitte öffne die Browser-Konsole (F12) für Details.",
           "error"
         );
         console.error(
-          "LÖSUNG: Gehe zu Supabase → Authentication → Providers → Email"
+          "💡 LÖSUNG: Gehe zu Supabase → Authentication → Providers → Email"
         );
-        console.error('Deaktiviere "Confirm email" und "Secure email change"');
         console.error(
-          "Stelle sicher, dass die subscriptions-Tabelle existiert"
+          '💡 Deaktiviere "Confirm email" und "Secure email change"'
+        );
+        console.error(
+          "💡 Stelle sicher, dass die subscriptions-Tabelle existiert"
         );
       } else if (error.message.includes("Unable to validate email")) {
         showAlert(
@@ -455,7 +663,7 @@ async function handleRegister(e) {
       return;
     }
 
-    debugLog("Registrierung erfolgreich!", data);
+    debugLog("✅ Registrierung erfolgreich!", data);
     hideModal("registerModal");
 
     if (
@@ -467,9 +675,9 @@ async function handleRegister(e) {
         "Registrierung erfolgreich! Bitte bestätige deine E-Mail, um dich anzumelden.",
         "success"
       );
-      debugLog("E-Mail-Bestätigung erforderlich");
+      debugLog("⚠️ E-Mail-Bestätigung erforderlich");
     } else if (data.session) {
-      debugLog("Auto-Login aktiv");
+      debugLog("✅ Auto-Login aktiv");
       currentUser = data.user;
       await loadUserSubscription();
       updateUIForLoggedInUser();
@@ -479,10 +687,10 @@ async function handleRegister(e) {
         "Registrierung erfolgreich! Du kannst dich jetzt anmelden.",
         "success"
       );
-      debugLog("Manuelle Anmeldung erforderlich");
+      debugLog("ℹ️ Manuelle Anmeldung erforderlich");
     }
   } catch (err) {
-    console.error("Unexpected error:", err);
+    console.error("❌ Unexpected error:", err);
     showAlert(
       "Ein unerwarteter Fehler ist aufgetreten. Siehe Browser-Konsole (F12).",
       "error"
@@ -499,8 +707,8 @@ async function logout() {
 }
 
 // ============================================
-// 8. SUBSCRIPTION & PAYMENT
-// >>> GLIEDERUNGSPUNKT 8: SUBSCRIPTION & PAYMENT
+// 9. SUBSCRIPTION & PAYMENT
+// >>> GLIEDERUNGSPUNKT 9: SUBSCRIPTION & PAYMENT
 // ============================================
 function handleSubscriptionClick(e) {
   const plan = e.target.getAttribute("data-plan");
@@ -548,15 +756,25 @@ async function handlePayment(e) {
 
   const plan = e.target.getAttribute("data-plan");
 
+  // Prüfe Cookie-Zustimmung
+  if (!CookieConsent.hasConsent()) {
+    showAlert(
+      "Bitte akzeptiere die Cookie-Einstellungen, um fortzufahren.",
+      "warning"
+    );
+    CookieConsent.showBanner();
+    return;
+  }
+
   if (!stripe) {
     showAlert(
-      "Stripe ist nicht konfiguriert. Demo-Modus wird verwendet.",
+      "⚠️ Stripe ist nicht konfiguriert. Demo-Modus wird verwendet.",
       "warning"
     );
     return handleDemoPayment(plan);
   }
 
-  debugLog("Starte Stripe Checkout für Plan:", plan);
+  debugLog("💳 Starte Stripe Checkout für Plan:", plan);
 
   try {
     const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -594,13 +812,16 @@ async function handlePayment(e) {
   } catch (error) {
     console.error("Payment error:", error);
     showAlert("Ein Fehler ist aufgetreten. Bitte versuche es erneut.", "error");
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Zur Zahlung";
+    }
   }
 }
 
 async function handleDemoPayment(plan) {
-  debugLog("Demo-Zahlung für Plan:", plan);
+  debugLog("🎭 Demo-Zahlung für Plan:", plan);
 
   showAlert("Zahlung wird verarbeitet... (Demo-Modus)", "success");
 
@@ -630,18 +851,21 @@ async function handleDemoPayment(plan) {
   hideModal("paymentModal");
   updateUIForLoggedInUser();
   showAlert(
-    "Zahlung erfolgreich! Willkommen im Mitgliederbereich! (Demo)",
+    "✅ Zahlung erfolgreich! Willkommen im Mitgliederbereich! (Demo)",
     "success"
   );
 }
 
 // ============================================
-// 9. UI-UPDATES (angemeldet/abgemeldet, User-Info)
-// >>> GLIEDERUNGSPUNKT 9: UI-UPDATES
+// 10. UI-UPDATES (angemeldet/abgemeldet, User-Info)
+// >>> GLIEDERUNGSPUNKT 10: UI-UPDATES
 // ============================================
 function updateUIForLoggedInUser() {
-  document.getElementById("loginBtn").style.display = "none";
-  document.getElementById("logoutBtn").style.display = "block";
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (loginBtn) loginBtn.style.display = "none";
+  if (logoutBtn) logoutBtn.style.display = "block";
 
   if (userSubscription) {
     const pricingSection = document.getElementById("pricing");
@@ -649,7 +873,11 @@ function updateUIForLoggedInUser() {
       pricingSection.style.display = "none";
     }
 
-    document.getElementById("membersArea").style.display = "block";
+    const membersArea = document.getElementById("membersArea");
+    if (membersArea) {
+      membersArea.style.display = "block";
+    }
+
     displayUserInfo();
     loadContent();
   } else {
@@ -657,19 +885,24 @@ function updateUIForLoggedInUser() {
     if (pricingSection) {
       pricingSection.style.display = "block";
     }
-    document.getElementById("membersArea").style.display = "none";
+
+    const membersArea = document.getElementById("membersArea");
+    if (membersArea) {
+      membersArea.style.display = "none";
+    }
   }
 }
 
 function updateUIForLoggedOutUser() {
-  document.getElementById("loginBtn").style.display = "block";
-  document.getElementById("logoutBtn").style.display = "none";
-  document.getElementById("membersArea").style.display = "none";
-
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const membersArea = document.getElementById("membersArea");
   const pricingSection = document.getElementById("pricing");
-  if (pricingSection) {
-    pricingSection.style.display = "block";
-  }
+
+  if (loginBtn) loginBtn.style.display = "block";
+  if (logoutBtn) logoutBtn.style.display = "none";
+  if (membersArea) membersArea.style.display = "none";
+  if (pricingSection) pricingSection.style.display = "block";
 }
 
 function displayUserInfo() {
@@ -680,8 +913,10 @@ function displayUserInfo() {
     elite: "Elite",
   };
 
-  document.getElementById("userInfo").innerHTML = `
-        <h3>Willkommen, ${userName}! </h3>
+  const userInfoElement = document.getElementById("userInfo");
+  if (userInfoElement) {
+    userInfoElement.innerHTML = `
+        <h3>Willkommen, ${userName}! 👋</h3>
         <p><strong>Aktueller Plan:</strong> ${
           planNames[userSubscription.plan]
         }</p>
@@ -690,11 +925,12 @@ function displayUserInfo() {
           userSubscription.end_date
         ).toLocaleDateString("de-DE")}</p>
     `;
+  }
 }
 
 // ============================================
-// 10. CONTENT MANAGEMENT (Laden, Zugriffsprüfung, Item-Erstellung, Tab-Wechsel)
-// >>> GLIEDERUNGSPUNKT 10: CONTENT MANAGEMENT
+// 11. CONTENT MANAGEMENT (Laden, Zugriffsprüfung, Item-Erstellung, Tab-Wechsel)
+// >>> GLIEDERUNGSPUNKT 11: CONTENT MANAGEMENT
 // ============================================
 function loadContent() {
   loadVideos();
@@ -704,6 +940,8 @@ function loadContent() {
 
 function loadVideos() {
   const videoList = document.getElementById("videoList");
+  if (!videoList) return;
+
   videoList.innerHTML = "";
 
   demoContent.videos.forEach((video) => {
@@ -715,6 +953,8 @@ function loadVideos() {
 
 function loadDocuments() {
   const documentList = document.getElementById("documentList");
+  if (!documentList) return;
+
   documentList.innerHTML = "";
 
   demoContent.documents.forEach((doc) => {
@@ -726,6 +966,8 @@ function loadDocuments() {
 
 function loadImages() {
   const imageList = document.getElementById("imageList");
+  if (!imageList) return;
+
   imageList.innerHTML = "";
 
   demoContent.images.forEach((image) => {
@@ -775,7 +1017,7 @@ function createContentItem(content, type, hasAccess) {
   div.innerHTML = `
         ${mediaElement}
         <div class="content-info">
-            <h4>${content.title} ${!hasAccess ? "" : ""}</h4>
+            <h4>${content.title} ${!hasAccess ? "🔒" : ""}</h4>
             <p>${content.description}</p>
             ${planBadges[content.requiredPlan]}
             ${
@@ -793,24 +1035,38 @@ function switchTab(tabName) {
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.remove("active");
   });
-  document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
+
+  const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+  if (activeBtn) {
+    activeBtn.classList.add("active");
+  }
 
   document.querySelectorAll(".tab-content").forEach((content) => {
     content.classList.remove("active");
   });
-  document.getElementById(tabName).classList.add("active");
+
+  const activeContent = document.getElementById(tabName);
+  if (activeContent) {
+    activeContent.classList.add("active");
+  }
 }
 
 // ============================================
-// 11. UTILITY FUNCTIONS (Modal, Alert)
-// >>> GLIEDERUNGSPUNKT 11: UTILITY FUNCTIONS
+// 12. UTILITY FUNCTIONS (Modal, Alert)
+// >>> GLIEDERUNGSPUNKT 12: UTILITY FUNCTIONS
 // ============================================
 function showModal(modalId) {
-  document.getElementById(modalId).style.display = "block";
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "block";
+  }
 }
 
 function hideModal(modalId) {
-  document.getElementById(modalId).style.display = "none";
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = "none";
+  }
 }
 
 function showAlert(message, type) {
@@ -819,9 +1075,11 @@ function showAlert(message, type) {
   alertDiv.textContent = message;
 
   const container = document.querySelector(".container");
-  container.insertBefore(alertDiv, container.firstChild);
+  if (container) {
+    container.insertBefore(alertDiv, container.firstChild);
 
-  setTimeout(() => {
-    alertDiv.remove();
-  }, 5000);
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 5000);
+  }
 }
