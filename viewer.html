@@ -12,13 +12,32 @@
       content="black-translucent"
     />
     <title>Content Viewer - FittiCoach</title>
+
+    <!-- ============================================
+         HTML-GLIEDERUNG (Übersicht für schnelle Navigation)
+         ============================================ -->
+    <!-- Suche im Code nach: "<!-- >>> GLIEDERUNGSPUNKT X: BEZEICHNUNG -->
+    " * * 1. META & HEAD (Viewport, Apple Web App, Title) * 2. DESIGN-SYSTEM
+    (CSS :root Variablen – Farben, Abstände, Typografie) * 3. BASE STYLES (HTML,
+    Body, Animations, Touch-Optimierung) * 4. NAVIGATION (Sticky Header mit Logo
+    & Zurück-Button) * 5. CONTAINER & LAYOUT (Responsive Container,
+    Flex-Struktur) * 6. CONTENT HEADER (Titel, Beschreibung, Plan-Badge) * 7.
+    GLASS CONTAINER (Video, PDF, Image – je nach Typ) * 8. CONTROLS (Download,
+    Drucken, Vollbild – kontextabhängig) * 9. INFO SECTION (Zusatzhinweise unter
+    dem Inhalt) * 10. LOADING & ERROR STATES (Ladeanimation, Fehlermeldung) *
+    11. FOOTER (DSGVO-Edition: 3-Spalten-Grid, Links, Copyright) * 12.
+    JAVASCRIPT (URL-Parameter parsen, Inhalt laden, Viewer anzeigen) -->
+
     <style>
+      /* ============================================
+         2. DESIGN-SYSTEM
+         >>> GLIEDERUNGSPUNKT 2: DESIGN-SYSTEM
+         ============================================ */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-
       :root {
         --primary: #0071e3;
         --primary-hover: #0077ed;
@@ -30,32 +49,33 @@
         --light-gray: #e8e8ed;
         --mid-gray: #86868b;
         --dark-gray: #1d1d1f;
-
         --glass-bg: rgba(255, 255, 255, 0.72);
         --glass-bg-dark: rgba(29, 29, 31, 0.72);
         --glass-border: rgba(255, 255, 255, 0.18);
         --glass-border-dark: rgba(255, 255, 255, 0.08);
-
         --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Display",
           "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         --radius-sm: 10px;
         --radius-md: 18px;
         --radius-lg: 24px;
         --radius-full: 980px;
-
         --space-xs: 0.5rem;
         --space-sm: 1rem;
         --space-md: 1.5rem;
         --space-lg: 2rem;
         --space-xl: 3rem;
+        --space-2xl: 4rem;
       }
 
+      /* ============================================
+         3. BASE STYLES
+         >>> GLIEDERUNGSPUNKT 3: BASE STYLES
+         ============================================ */
       html {
         scroll-behavior: smooth;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-
       body {
         font-family: var(--font-system);
         background: linear-gradient(180deg, #f5f5f7 0%, #ffffff 100%);
@@ -66,7 +86,47 @@
         line-height: 1.47059;
       }
 
-      /* Navigation */
+      /* Smooth animations */
+      #content {
+        animation: fadeIn 0.4s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Touch optimization */
+      button,
+      .btn,
+      a {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+      @media (max-width: 767px) {
+        button,
+        .btn {
+          min-height: 44px;
+        }
+      }
+
+      /* Safe Areas für iPhone */
+      @supports (padding: max(0px)) {
+        body {
+          padding-left: env(safe-area-inset-left);
+          padding-right: env(safe-area-inset-right);
+        }
+      }
+
+      /* ============================================
+         4. NAVIGATION
+         >>> GLIEDERUNGSPUNKT 4: NAVIGATION
+         ============================================ */
       .header {
         position: sticky;
         top: 0;
@@ -76,7 +136,6 @@
         -webkit-backdrop-filter: saturate(180%) blur(20px);
         border-bottom: 1px solid var(--glass-border-dark);
       }
-
       .header-content {
         max-width: 1200px;
         margin: 0 auto;
@@ -86,7 +145,6 @@
         justify-content: space-between;
         align-items: center;
       }
-
       .logo {
         font-size: 21px;
         font-weight: 600;
@@ -95,11 +153,9 @@
         letter-spacing: -0.003em;
         transition: opacity 0.2s;
       }
-
       .logo:hover {
         opacity: 0.7;
       }
-
       .back-btn {
         display: inline-flex;
         align-items: center;
@@ -114,13 +170,15 @@
         transition: all 0.2s;
         letter-spacing: -0.01em;
       }
-
       .back-btn:hover {
         background: rgba(255, 255, 255, 0.12);
         border-color: rgba(255, 255, 255, 0.24);
       }
 
-      /* Container */
+      /* ============================================
+         5. CONTAINER & LAYOUT
+         >>> GLIEDERUNGSPUNKT 5: CONTAINER & LAYOUT
+         ============================================ */
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -128,12 +186,33 @@
         flex: 1;
       }
 
-      /* Content Header */
+      /* Responsive */
+      @media (max-width: 768px) {
+        .content-title {
+          font-size: 32px;
+        }
+        .header-content {
+          flex-direction: column;
+          gap: var(--space-sm);
+          padding: var(--space-sm) var(--space-md);
+          min-height: auto;
+        }
+        .container {
+          padding: var(--space-lg) var(--space-sm);
+        }
+        .glass-container {
+          padding: var(--space-md);
+        }
+      }
+
+      /* ============================================
+         6. CONTENT HEADER
+         >>> GLIEDERUNGSPUNKT 6: CONTENT HEADER
+         ============================================ */
       .content-header {
         text-align: center;
         margin-bottom: var(--space-xl);
       }
-
       .content-title {
         font-size: clamp(32px, 5vw, 56px);
         font-weight: 700;
@@ -142,7 +221,6 @@
         margin-bottom: var(--space-sm);
         line-height: 1.05;
       }
-
       .content-description {
         font-size: clamp(17px, 2vw, 21px);
         color: var(--mid-gray);
@@ -150,7 +228,6 @@
         margin: 0 auto;
         line-height: 1.47059;
       }
-
       .plan-badge {
         display: inline-block;
         padding: 6px 14px;
@@ -161,23 +238,23 @@
         font-size: 12px;
         letter-spacing: 0.06em;
       }
-
       .plan-badge.basic {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
       }
-
       .plan-badge.premium {
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         color: white;
       }
-
       .plan-badge.elite {
         background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
         color: white;
       }
 
-      /* Glass Container */
+      /* ============================================
+         7. GLASS CONTAINER (Video, PDF, Image)
+         >>> GLIEDERUNGSPUNKT 7: GLASS CONTAINER
+         ============================================ */
       .glass-container {
         position: relative;
         background: var(--glass-bg);
@@ -220,7 +297,18 @@
         margin: 0 auto;
       }
 
-      /* Buttons */
+      /* ============================================
+         8. CONTROLS (Download, Drucken, Vollbild)
+         >>> GLIEDERUNGSPUNKT 8: CONTROLS
+         ============================================ */
+      .controls {
+        display: flex;
+        gap: var(--space-sm);
+        justify-content: center;
+        margin-top: var(--space-lg);
+        flex-wrap: wrap;
+      }
+
       .btn {
         display: inline-flex;
         align-items: center;
@@ -236,39 +324,29 @@
         transition: all 0.2s;
         letter-spacing: -0.01em;
       }
-
       .btn-primary {
         background: var(--primary);
         color: var(--white);
       }
-
       .btn-primary:hover {
         background: var(--primary-hover);
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);
       }
-
       .btn-secondary {
         background: transparent;
         color: var(--dark-gray);
         border: 1px solid var(--light-gray);
       }
-
       .btn-secondary:hover {
         background: var(--near-white);
         border-color: var(--mid-gray);
       }
 
-      /* Controls */
-      .controls {
-        display: flex;
-        gap: var(--space-sm);
-        justify-content: center;
-        margin-top: var(--space-lg);
-        flex-wrap: wrap;
-      }
-
-      /* Info Section */
+      /* ============================================
+         9. INFO SECTION
+         >>> GLIEDERUNGSPUNKT 9: INFO SECTION
+         ============================================ */
       .info-section {
         background: var(--glass-bg);
         backdrop-filter: saturate(180%) blur(20px);
@@ -278,7 +356,6 @@
         padding: var(--space-lg);
         margin-top: var(--space-xl);
       }
-
       .info-section h3 {
         font-size: 24px;
         font-weight: 600;
@@ -286,26 +363,26 @@
         margin-bottom: var(--space-sm);
         letter-spacing: -0.01em;
       }
-
       .info-section p {
         color: var(--mid-gray);
         line-height: 1.47059;
         font-size: 17px;
       }
 
-      /* Loading */
+      /* ============================================
+         10. LOADING & ERROR STATES
+         >>> GLIEDERUNGSPUNKT 10: LOADING & ERROR
+         ============================================ */
       .loading {
         text-align: center;
         padding: var(--space-xl);
         font-size: 17px;
         color: var(--mid-gray);
       }
-
       .loading::after {
         content: "...";
         animation: dots 1.5s infinite;
       }
-
       @keyframes dots {
         0%,
         20% {
@@ -320,7 +397,6 @@
         }
       }
 
-      /* Error */
       .error {
         background: rgba(255, 59, 48, 0.1);
         border: 1px solid rgba(255, 59, 48, 0.3);
@@ -329,88 +405,121 @@
         text-align: center;
         color: #c5221f;
       }
-
       .error h2 {
         margin-bottom: var(--space-sm);
         font-size: 24px;
       }
 
-      /* Responsive */
-      @media (max-width: 768px) {
-        .content-title {
-          font-size: 32px;
-        }
+      /* ============================================
+         11. FOOTER (DSGVO-Edition)
+         >>> GLIEDERUNGSPUNKT 11: FOOTER
+         ============================================ */
+      footer {
+        background: var(--glass-bg-dark);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-top: 1px solid var(--glass-border-dark);
+        padding: var(--space-2xl) 0 var(--space-lg);
+        margin-top: var(--space-2xl);
+      }
 
-        .header-content {
-          flex-direction: column;
-          gap: var(--space-sm);
-          padding: var(--space-sm) var(--space-md);
-          min-height: auto;
-        }
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 var(--space-md);
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+        margin-bottom: var(--space-xl);
+      }
 
-        .container {
-          padding: var(--space-lg) var(--space-sm);
-        }
-
-        .glass-container {
-          padding: var(--space-md);
+      @media (min-width: 768px) {
+        .footer-content {
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--space-2xl);
         }
       }
 
-      /* Smooth animations */
-      #content {
-        animation: fadeIn 0.4s ease;
+      .footer-section h4 {
+        color: var(--white);
+        font-size: 17px;
+        font-weight: 600;
+        margin-bottom: var(--space-sm);
+        letter-spacing: -0.01em;
       }
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+      .footer-section p {
+        color: var(--mid-gray);
+        font-size: 15px;
+        line-height: 1.5;
       }
 
-      /* Touch optimization */
-      button,
-      .btn,
-      a {
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
+      .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
       }
 
-      @media (max-width: 767px) {
-        button,
-        .btn {
-          min-height: 44px;
-        }
+      .footer-links li {
+        margin-bottom: var(--space-xs);
+      }
+
+      .footer-links a {
+        color: var(--mid-gray);
+        text-decoration: none;
+        font-size: 15px;
+        transition: color 0.2s;
+      }
+
+      .footer-links a:hover {
+        color: var(--white);
+      }
+
+      .footer-bottom {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-lg) var(--space-md) 0;
+        border-top: 1px solid var(--glass-border-dark);
+        text-align: center;
+      }
+
+      .footer-bottom p {
+        color: var(--mid-gray);
+        font-size: 13px;
+        margin: 0;
       }
     </style>
   </head>
   <body>
-    <!-- Header -->
+    <!-- ============================================
+         4. NAVIGATION (HTML)
+         >>> GLIEDERUNGSPUNKT 4: NAVIGATION
+         ============================================ -->
     <div class="header">
       <div class="header-content">
-        <a href="/" class="logo">🏋️ FittiCoach</a>
-        <a href="/" class="back-btn">← Zurück</a>
+        <a href="/" class="logo">FittiCoach</a>
+        <a href="/" class="back-btn">Zurück</a>
       </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- ============================================
+         5. MAIN CONTENT CONTAINER
+         >>> GLIEDERUNGSPUNKT 5: CONTAINER
+         ============================================ -->
     <div class="container">
+      <!-- Loading State -->
       <div class="loading" id="loading">Lädt</div>
 
+      <!-- Content (wird per JS eingeblendet) -->
       <div id="content" style="display: none">
-        <!-- Content Header -->
+        <!-- 6. Content Header -->
         <div class="content-header">
           <h1 class="content-title" id="contentTitle">Wird geladen...</h1>
           <p class="content-description" id="contentDescription"></p>
           <span class="plan-badge" id="contentBadge"></span>
         </div>
 
-        <!-- Video Container -->
+        <!-- 7. Video Container -->
         <div class="glass-container" id="videoContainer" style="display: none">
           <video id="videoPlayer" controls controlsList="nodownload">
             <source id="videoSource" type="video/mp4" />
@@ -418,7 +527,7 @@
           </video>
         </div>
 
-        <!-- Document Container -->
+        <!-- 7. Document Container -->
         <div
           class="glass-container"
           id="documentContainer"
@@ -427,39 +536,39 @@
           <iframe id="pdfViewer" class="pdf-viewer"></iframe>
           <div class="controls">
             <a id="downloadBtn" class="btn btn-primary" download
-              >📥 Herunterladen</a
+              >Herunterladen</a
             >
             <button onclick="window.print()" class="btn btn-secondary">
-              🖨️ Drucken
+              Drucken
             </button>
           </div>
         </div>
 
-        <!-- Image Container -->
+        <!-- 7. Image Container -->
         <div class="glass-container" id="imageContainer" style="display: none">
           <img id="imageViewer" class="image-viewer" alt="Content Image" />
           <div class="controls">
             <a id="imageDownloadBtn" class="btn btn-primary" download
-              >📥 Herunterladen</a
+              >Herunterladen</a
             >
             <button onclick="openFullscreen()" class="btn btn-secondary">
-              🔍 Vollbild
+              Vollbild
             </button>
           </div>
         </div>
 
-        <!-- Additional Info -->
+        <!-- 9. Info Section -->
         <div class="info-section">
-          <h3>💡 Über diesen Inhalt</h3>
+          <h3>Über diesen Inhalt</h3>
           <p id="additionalInfo">
             Dieser exklusive Content ist Teil deines Mitgliedschaftsplans.
           </p>
         </div>
       </div>
 
-      <!-- Error State -->
+      <!-- 10. Error State -->
       <div class="error" id="error" style="display: none">
-        <h2>⚠️ Fehler beim Laden</h2>
+        <h2>Fehler beim Laden</h2>
         <p id="errorMessage"></p>
         <a href="/" class="btn btn-primary" style="margin-top: var(--space-md)"
           >Zurück zum Dashboard</a
@@ -467,6 +576,44 @@
       </div>
     </div>
 
+    <!-- ============================================
+         11. FOOTER (DSGVO-Edition)
+         >>> GLIEDERUNGSPUNKT 11: FOOTER
+         ============================================ -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>FittiCoach</h4>
+          <p>Premium Fitness Training für deine Ziele</p>
+        </div>
+        <div class="footer-section">
+          <h4>Rechtliches</h4>
+          <ul class="footer-links">
+            <li><a href="impressum.html">Impressum</a></li>
+            <li><a href="datenschutz.html">Datenschutz</a></li>
+            <li><a href="cookies.html">Cookie-Richtlinie</a></li>
+            <li><a href="agb.html">AGB</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="mailto:support@fitticoach.de">support@fitticoach.de</a>
+            </li>
+            <li><a href="/">Zurück zum Dashboard</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 FittiCoach. Alle Rechte vorbehalten.</p>
+      </div>
+    </footer>
+
+    <!-- ============================================
+         12. JAVASCRIPT (Content-Loading, Viewer, Fullscreen)
+         >>> GLIEDERUNGSPUNKT 12: JAVASCRIPT
+         ============================================ -->
     <script>
       // Parse URL parameters
       const urlParams = new URLSearchParams(window.location.search);
