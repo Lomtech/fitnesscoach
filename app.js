@@ -67,7 +67,7 @@ const demoContent = {
       id: 1,
       title: "Ganzkörper-Workout",
       description: "Komplettes 30-Minuten Training",
-      url: "https://example.com/video1.mp4",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/videos/basic/WhatsApp%20Video%202025-10-30%20at%2002.38.17.mp4",
       thumbnail:
         "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "basic",
@@ -76,8 +76,9 @@ const demoContent = {
       id: 2,
       title: "Core-Strengthening",
       description: "Intensives Bauchmuskeltraining",
-      url: "https://example.com/video2.mp4",
-      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/videos/basic/WhatsApp%20Video%202025-10-30%20at%2002.38.17.mp4",
+      thumbnail:
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "basic",
     },
     {
@@ -85,7 +86,8 @@ const demoContent = {
       title: "HIIT Advanced",
       description: "Hochintensives Intervalltraining",
       url: "https://example.com/video3.mp4",
-      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
+      thumbnail:
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
     },
     {
@@ -93,7 +95,8 @@ const demoContent = {
       title: "Yoga & Mobility",
       description: "Flexibilität und Entspannung",
       url: "https://example.com/video4.mp4",
-      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
+      thumbnail:
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
     },
     {
@@ -101,7 +104,8 @@ const demoContent = {
       title: "Personal Training Session",
       description: "Exklusive 1:1 Trainingseinheit",
       url: "https://example.com/video5.mp4",
-      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
+      thumbnail:
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "elite",
     },
   ],
