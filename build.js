@@ -87,7 +87,7 @@ if (STRIPE_PRICE_ELITE) {
   );
 }
 
-// Schreibe app.js in dist
+// Schreibe app.js in dis
 fs.writeFileSync(path.join(distDir, "app.js"), appJs);
 console.log("✅ app.js erstellt");
 
