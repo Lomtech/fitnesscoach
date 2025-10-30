@@ -41,7 +41,7 @@ function debugLog(...args) {
 }
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-debugLog("✅ Supabase initialisiert:", {
+debugLog("Supabase initialisiert:", {
   url: SUPABASE_URL,
   keyPrefix: SUPABASE_ANON_KEY.substring(0, 20) + "...",
 });
@@ -73,7 +73,7 @@ const CookieConsent = {
       timestamp: new Date().toISOString(),
     };
     localStorage.setItem(this.CONSENT_COOKIE, JSON.stringify(consent));
-    debugLog("✅ Cookie-Zustimmung gespeichert:", consent);
+    debugLog("Cookie-Zustimmung gespeichert:", consent);
   },
   showBanner() {
     const banner = document.getElementById("cookieConsent");
@@ -105,14 +105,14 @@ const CookieConsent = {
     if (!this.hasConsent()) {
       this.showBanner();
     } else {
-      debugLog("ℹ️ Cookie-Zustimmung bereits vorhanden");
+      debugLog("Cookie-Zustimmung bereits vorhanden");
       if (this.canUseAnalytics()) {
         this.loadAnalytics();
       }
     }
   },
   loadAnalytics() {
-    debugLog("📊 Analytics wird geladen (Zustimmung vorhanden)");
+    debugLog("Analytics wird geladen (Zustimmung vorhanden)");
   },
 };
 
@@ -259,12 +259,12 @@ const planNames = {
 // ============================================
 document.addEventListener("DOMContentLoaded", async () => {
   CookieConsent.init();
-  debugLog("🔑 STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
+  debugLog("STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
   if (CookieConsent.hasConsent()) {
     if (STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY") {
-      debugLog("✅ Stripe Key ist gesetzt, versuche zu initialisieren...");
+      debugLog("Stripe Key ist gesetzt, versuche zu initialisieren...");
       if (typeof Stripe === "undefined") {
-        console.error("❌ Stripe.js Bibliothek nicht geladen!");
+        console.error("Stripe.js Bibliothek nicht geladen!");
         showAlert(
           "Stripe.js konnte nicht geladen werden. Bitte Seite neu laden.",
           "error"
@@ -272,10 +272,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else {
         try {
           stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-          debugLog("✅ Stripe erfolgreich initialisiert");
-          console.log("✅ Stripe ist bereit für Zahlungen!");
+          debugLog("Stripe erfolgreich initialisiert");
+          console.log("Stripe ist bereit für Zahlungen!");
         } catch (error) {
-          console.error("❌ Stripe Initialisierungsfehler:", error);
+          console.error("Stripe Initialisierungsfehler:", error);
           showAlert(
             "Stripe konnte nicht geladen werden. Zahlungen sind deaktiviert.",
             "error"
@@ -284,11 +284,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     } else {
       console.warn(
-        "⚠️ Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
+        "Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
       );
     }
   } else {
-    console.log("ℹ️ Stripe-Initialisierung wartet auf Cookie-Zustimmung");
+    console.log("Stripe-Initialisierung wartet auf Cookie-Zustimmung");
   }
   await checkUserSession();
   initializeEventListeners();
@@ -394,14 +394,14 @@ function initializeEventListeners() {
     acceptAllBtn.addEventListener("click", () => {
       CookieConsent.setConsent(true, true);
       CookieConsent.hideBanner();
-      showAlert("✅ Alle Cookies akzeptiert", "success");
+      showAlert("Alle Cookies akzeptiert", "success");
       if (
         !stripe &&
         STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY" &&
         typeof Stripe !== "undefined"
       ) {
         stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-        debugLog("✅ Stripe nach Cookie-Zustimmung initialisiert");
+        debugLog("Stripe nach Cookie-Zustimmung initialisiert");
       }
       CookieConsent.loadAnalytics();
     });
@@ -411,14 +411,14 @@ function initializeEventListeners() {
     acceptEssentialBtn.addEventListener("click", () => {
       CookieConsent.setConsent(false, false);
       CookieConsent.hideBanner();
-      showAlert("✅ Nur notwendige Cookies akzeptiert", "success");
+      showAlert("Nur notwendige Cookies akzeptiert", "success");
       if (
         !stripe &&
         STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY" &&
         typeof Stripe !== "undefined"
       ) {
         stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-        debugLog("✅ Stripe nach Cookie-Zustimmung initialisiert");
+        debugLog("Stripe nach Cookie-Zustimmung initialisiert");
       }
     });
   }
@@ -445,11 +445,11 @@ async function handleLogin(e) {
   });
   debugLog("Login-Antwort:", { data, error });
   if (error) {
-    console.error("❌ Login error:", error);
+    console.error("Login error:", error);
     showAlert("Anmeldung fehlgeschlagen: " + error.message, "error");
     return;
   }
-  debugLog("✅ Login erfolgreich!");
+  debugLog("Login erfolgreich!");
   currentUser = data.user;
   await loadUserSubscription();
   updateUIForLoggedInUser();
@@ -493,7 +493,7 @@ async function handleRegister(e) {
     });
     debugLog("Supabase Antwort:", { data, error });
     if (error) {
-      console.error("❌ Registration error:", error);
+      console.error("Registration error:", error);
       if (error.message.includes("User already registered")) {
         showAlert(
           "Diese E-Mail ist bereits registriert. Bitte melde dich an.",
@@ -501,7 +501,7 @@ async function handleRegister(e) {
         );
       } else if (error.message.includes("Database error")) {
         showAlert(
-          "❌ Datenbankfehler! Bitte öffne die Browser-Konsole (F12) für Details.",
+          "Datenbankfehler! Bitte öffne die Browser-Konsole (F12) für Details.",
           "error"
         );
       } else if (error.message.includes("Unable to validate email")) {
@@ -514,7 +514,7 @@ async function handleRegister(e) {
       }
       return;
     }
-    debugLog("✅ Registrierung erfolgreich!", data);
+    debugLog("Registrierung erfolgreich!", data);
     hideModal("registerModal");
     if (
       data.user &&
@@ -525,9 +525,9 @@ async function handleRegister(e) {
         "Registrierung erfolgreich! Bitte bestätige deine E-Mail, um dich anzumelden.",
         "success"
       );
-      debugLog("⚠️ E-Mail-Bestätigung erforderlich");
+      debugLog("E-Mail-Bestätigung erforderlich");
     } else if (data.session) {
-      debugLog("✅ Auto-Login aktiv");
+      debugLog("Auto-Login aktiv");
       currentUser = data.user;
       await loadUserSubscription();
       updateUIForLoggedInUser();
@@ -537,10 +537,10 @@ async function handleRegister(e) {
         "Registrierung erfolgreich! Du kannst dich jetzt anmelden.",
         "success"
       );
-      debugLog("ℹ️ Manuelle Anmeldung erforderlich");
+      debugLog("Manuelle Anmeldung erforderlich");
     }
   } catch (err) {
-    console.error("❌ Unexpected error:", err);
+    console.error("Unexpected error:", err);
     showAlert(
       "Ein unerwarteter Fehler ist aufgetreten. Siehe Browser-Konsole (F12).",
       "error"
@@ -567,20 +567,15 @@ function handleSubscriptionClick(e) {
     return;
   }
 
-  // NEU: Prüfen ob User bereits ein Abo hat
   if (userSubscription) {
-    // Wenn User bereits diesen Plan hat
     if (userSubscription.plan === plan) {
       showAlert("Du hast bereits diesen Plan", "info");
       return;
     }
-
-    // Upgrade/Downgrade anbieten
     showChangePlanModal(plan);
     return;
   }
 
-  // Neues Abo abschließen
   showPaymentModal(plan);
 }
 
@@ -608,12 +603,12 @@ async function handlePayment(e) {
   }
   if (!stripe) {
     showAlert(
-      "⚠️ Stripe ist nicht konfiguriert. Demo-Modus wird verwendet.",
+      "Stripe ist nicht konfiguriert. Demo-Modus wird verwendet.",
       "warning"
     );
     return handleDemoPayment(plan);
   }
-  debugLog("💳 Starte Stripe Checkout für Plan:", plan);
+  debugLog("Starte Stripe Checkout für Plan:", plan);
   try {
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
@@ -653,7 +648,7 @@ async function handlePayment(e) {
 }
 
 async function handleDemoPayment(plan) {
-  debugLog("🎭 Demo-Zahlung für Plan:", plan);
+  debugLog("Demo-Zahlung für Plan:", plan);
   showAlert("Zahlung wird verarbeitet... (Demo-Modus)", "success");
   await new Promise((resolve) => setTimeout(resolve, 1500));
   const { data, error } = await supabase
@@ -678,7 +673,7 @@ async function handleDemoPayment(plan) {
   hideModal("paymentModal");
   updateUIForLoggedInUser();
   showAlert(
-    "✅ Zahlung erfolgreich! Willkommen im Mitgliederbereich! (Demo)",
+    "Zahlung erfolgreich! Willkommen im Mitgliederbereich! (Demo)",
     "success"
   );
 }
@@ -687,9 +682,6 @@ async function handleDemoPayment(plan) {
 // >>> GLIEDERUNGSPUNKT 10: UP- & DOWNGRADE MANAGEMENT (NEU)
 // ============================================
 
-/**
- * Zeigt Modal für Plan-Änderung (Upgrade oder Downgrade)
- */
 function showChangePlanModal(newPlan) {
   const currentPlan = userSubscription.plan;
   const currentLevel = planHierarchy[currentPlan];
@@ -705,8 +697,8 @@ function showChangePlanModal(newPlan) {
 
   modal.innerHTML = `
     <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>${isUpgrade ? "⬆️ Upgrade" : "⬇️ Downgrade"} deines Plans</h2>
+      <span class="close">×</span>
+      <h2>${isUpgrade ? "Upgrade" : "Downgrade"} deines Plans</h2>
       
       <div class="plan-change-info">
         <div class="current-plan-box">
@@ -762,7 +754,6 @@ function showChangePlanModal(newPlan) {
 
   document.body.appendChild(modal);
 
-  // Event Listeners für das neue Modal
   modal.querySelector(".close").addEventListener("click", () => {
     modal.remove();
   });
@@ -779,7 +770,6 @@ function showChangePlanModal(newPlan) {
       modal.remove();
     });
 
-  // Schließen bei Klick außerhalb
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       modal.remove();
@@ -787,11 +777,8 @@ function showChangePlanModal(newPlan) {
   });
 }
 
-/**
- * Führt die Plan-Änderung durch
- */
 async function handlePlanChange(newPlan, isUpgrade) {
-  debugLog(`${isUpgrade ? "⬆️ Upgrade" : "⬇️ Downgrade"} zu Plan:`, newPlan);
+  debugLog(`${isUpgrade ? "Upgrade" : "Downgrade"} zu Plan:`, newPlan);
 
   const confirmBtn = document.querySelector(".confirm-change");
   if (confirmBtn) {
@@ -801,10 +788,8 @@ async function handlePlanChange(newPlan, isUpgrade) {
 
   try {
     if (isUpgrade) {
-      // Upgrade: Sofort aktivieren
       await processUpgrade(newPlan);
     } else {
-      // Downgrade: Für Ende der Periode vormerken
       await processDowngrade(newPlan);
     }
   } catch (error) {
@@ -822,15 +807,10 @@ async function handlePlanChange(newPlan, isUpgrade) {
   }
 }
 
-/**
- * Verarbeitet ein Upgrade (sofortige Aktivierung)
- */
 async function processUpgrade(newPlan) {
   debugLog("Processing upgrade to:", newPlan);
 
-  // Demo-Modus oder Stripe
   if (!stripe || STRIPE_PUBLISHABLE_KEY === "DEIN_STRIPE_PUBLISHABLE_KEY") {
-    // Demo-Upgrade
     showAlert("Upgrade wird verarbeitet... (Demo-Modus)", "success");
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -838,7 +818,6 @@ async function processUpgrade(newPlan) {
       .from("subscriptions")
       .update({
         plan: newPlan,
-        updated_at: new Date().toISOString(),
       })
       .eq("id", userSubscription.id)
       .select()
@@ -853,15 +832,11 @@ async function processUpgrade(newPlan) {
     userSubscription = data;
     updateUIForLoggedInUser();
     showAlert(
-      `✅ Upgrade zu ${planNames[newPlan]} erfolgreich! (Demo)`,
+      `Upgrade zu ${planNames[newPlan]} erfolgreich! (Demo)`,
       "success"
     );
   } else {
-    // Echter Stripe-Upgrade-Prozess
     showAlert("Weiterleitung zur Zahlungsseite...", "info");
-
-    // Hier würde der Stripe Checkout für Upgrade gestartet
-    // In Production würdest du einen Server-Endpoint aufrufen, der die Subscription updated
     const { error: stripeError } = await stripe.redirectToCheckout({
       lineItems: [
         {
@@ -883,22 +858,17 @@ async function processUpgrade(newPlan) {
   }
 }
 
-/**
- * Verarbeitet ein Downgrade (am Ende der Periode)
- */
 async function processDowngrade(newPlan) {
   debugLog("Processing downgrade to:", newPlan);
 
   showAlert("Downgrade wird verarbeitet...", "info");
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  // Downgrade für Ende der Periode vormerken
   const { data, error } = await supabase
     .from("subscriptions")
     .update({
       pending_plan: newPlan,
       pending_change_date: userSubscription.end_date,
-      updated_at: new Date().toISOString(),
     })
     .eq("id", userSubscription.id)
     .select()
@@ -917,14 +887,11 @@ async function processDowngrade(newPlan) {
     "de-DE"
   );
   showAlert(
-    `✅ Downgrade zu ${planNames[newPlan]} vorgemerkt! Wechsel erfolgt am ${endDate}.`,
+    `Downgrade zu ${planNames[newPlan]} vorgemerkt! Wechsel erfolgt am ${endDate}.`,
     "success"
   );
 }
 
-/**
- * Storniert eine vorgemerkte Plan-Änderung
- */
 async function cancelPendingPlanChange() {
   if (!userSubscription.pending_plan) {
     showAlert("Keine ausstehende Plan-Änderung vorhanden", "info");
@@ -936,7 +903,6 @@ async function cancelPendingPlanChange() {
     .update({
       pending_plan: null,
       pending_change_date: null,
-      updated_at: new Date().toISOString(),
     })
     .eq("id", userSubscription.id)
     .select()
@@ -950,7 +916,7 @@ async function cancelPendingPlanChange() {
 
   userSubscription = data;
   updateUIForLoggedInUser();
-  showAlert("✅ Geplante Plan-Änderung wurde storniert", "success");
+  showAlert("Geplante Plan-Änderung wurde storniert", "success");
 }
 
 // ============================================
@@ -971,7 +937,7 @@ function updateUIForLoggedInUser() {
       membersArea.style.display = "block";
     }
     displayUserInfo();
-    updatePricingButtons(); // NEU: Buttons aktualisieren
+    updatePricingButtons();
     loadContent();
   } else {
     const pricingSection = document.getElementById("pricing");
@@ -982,7 +948,7 @@ function updateUIForLoggedInUser() {
     if (membersArea) {
       membersArea.style.display = "none";
     }
-    updatePricingButtons(); // NEU: Buttons auch ohne Abo aktualisieren
+    updatePricingButtons();
   }
 }
 
@@ -997,9 +963,6 @@ function updateUIForLoggedOutUser() {
   if (pricingSection) pricingSection.style.display = "block";
 }
 
-/**
- * NEU: Aktualisiert die Buttons in der Pricing-Sektion
- */
 function updatePricingButtons() {
   document.querySelectorAll(".subscribe-btn").forEach((btn) => {
     const plan = btn.getAttribute("data-plan");
@@ -1023,7 +986,7 @@ function updatePricingButtons() {
     const planLevel = planHierarchy[plan];
 
     if (currentPlan === plan) {
-      btn.textContent = "Aktueller Plan ✓";
+      btn.textContent = "Aktueller Plan";
       btn.className = "subscribe-btn btn-secondary";
       btn.disabled = true;
     } else if (planLevel > currentLevel) {
@@ -1050,7 +1013,7 @@ function displayUserInfo() {
       ).toLocaleDateString("de-DE");
       pendingChangeHtml = `
         <div class="alert alert-warning" style="margin-top: 15px;">
-          <p><strong>⚠️ Geplante Änderung:</strong></p>
+          <p><strong>Geplante Änderung:</strong></p>
           <p>Wechsel zu ${
             planNames[userSubscription.pending_plan]
           }-Plan am ${pendingDate}</p>
@@ -1061,8 +1024,24 @@ function displayUserInfo() {
       `;
     }
 
+    let accessWarning = "";
+    if (
+      userSubscription.pending_plan &&
+      planHierarchy[userSubscription.pending_plan] <
+        planHierarchy[userSubscription.plan]
+    ) {
+      const endDate = new Date(
+        userSubscription.pending_change_date
+      ).toLocaleDateString("de-DE");
+      accessWarning = `
+        <div class="alert alert-warning" style="margin-top: 10px; font-size: 0.9em;">
+          Premium-Zugriff endet am <strong>${endDate}</strong>
+        </div>
+      `;
+    }
+
     userInfoElement.innerHTML = `
-      <h3>Willkommen, ${userName}! 👋</h3>
+      <h3>Willkommen, ${userName}!</h3>
       <p><strong>Aktueller Plan:</strong> ${
         planNames[userSubscription.plan]
       }</p>
@@ -1071,6 +1050,7 @@ function displayUserInfo() {
         userSubscription.end_date
       ).toLocaleDateString("de-DE")}</p>
       ${pendingChangeHtml}
+      ${accessWarning}
       <div style="margin-top: 20px;">
         <button onclick="showManagePlanSection()" class="btn btn-primary">
           Plan verwalten
@@ -1080,9 +1060,6 @@ function displayUserInfo() {
   }
 }
 
-/**
- * NEU: Zeigt Sektion zur Plan-Verwaltung
- */
 function showManagePlanSection() {
   const currentPlan = userSubscription.plan;
   const currentLevel = planHierarchy[currentPlan];
@@ -1101,7 +1078,7 @@ function showManagePlanSection() {
       let buttonHtml = "";
       if (isCurrent) {
         buttonHtml =
-          '<button class="btn btn-secondary" disabled>Aktueller Plan ✓</button>';
+          '<button class="btn btn-secondary" disabled>Aktueller Plan</button>';
       } else if (isUpgrade) {
         buttonHtml = `<button class="btn btn-success" onclick="showChangePlanModal('${plan}'); document.getElementById('managePlanModal').remove();">Upgraden</button>`;
       } else {
@@ -1120,7 +1097,7 @@ function showManagePlanSection() {
 
   modal.innerHTML = `
     <div class="modal-content">
-      <span class="close">&times;</span>
+      <span class="close">×</span>
       <h2>Plan verwalten</h2>
       <p style="margin-bottom: 20px;">Wähle einen neuen Plan oder behalte deinen aktuellen Plan.</p>
       <div class="plans-grid">
@@ -1142,7 +1119,6 @@ function showManagePlanSection() {
   });
 }
 
-// Globale Funktionen für onclick-Handler
 window.cancelPendingPlanChange = cancelPendingPlanChange;
 window.showManagePlanSection = showManagePlanSection;
 window.showChangePlanModal = showChangePlanModal;
@@ -1161,7 +1137,7 @@ function loadVideos() {
   if (!videoList) return;
   videoList.innerHTML = "";
   demoContent.videos.forEach((video) => {
-    const hasAccess = checkAccess(video.requiredPlan);
+    const hasAccess = hasActiveAccess(video.requiredPlan);
     const item = createContentItem(video, "video", hasAccess);
     videoList.appendChild(item);
   });
@@ -1172,7 +1148,7 @@ function loadDocuments() {
   if (!documentList) return;
   documentList.innerHTML = "";
   demoContent.documents.forEach((doc) => {
-    const hasAccess = checkAccess(doc.requiredPlan);
+    const hasAccess = hasActiveAccess(doc.requiredPlan);
     const item = createContentItem(doc, "document", hasAccess);
     documentList.appendChild(item);
   });
@@ -1183,7 +1159,7 @@ function loadImages() {
   if (!imageList) return;
   imageList.innerHTML = "";
   demoContent.images.forEach((image) => {
-    const hasAccess = checkAccess(image.requiredPlan);
+    const hasAccess = hasActiveAccess(image.requiredPlan);
     const item = createContentItem(image, "image", hasAccess);
     imageList.appendChild(item);
   });
@@ -1192,6 +1168,27 @@ function loadImages() {
 function checkAccess(requiredPlan) {
   if (!userSubscription) return false;
   return planHierarchy[userSubscription.plan] >= planHierarchy[requiredPlan];
+}
+
+function hasActiveAccess(requiredPlan) {
+  if (!userSubscription) return false;
+
+  const currentLevel = planHierarchy[userSubscription.plan];
+  const requiredLevel = planHierarchy[requiredPlan];
+
+  if (!userSubscription.pending_plan) {
+    return currentLevel >= requiredLevel;
+  }
+
+  const pendingLevel = planHierarchy[userSubscription.pending_plan];
+  const changeDate = new Date(userSubscription.pending_change_date);
+  const now = new Date();
+
+  if (now < changeDate) {
+    return currentLevel >= requiredLevel;
+  }
+
+  return pendingLevel >= requiredLevel;
 }
 
 function createContentItem(content, type, hasAccess) {
