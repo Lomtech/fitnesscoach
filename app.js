@@ -21,7 +21,7 @@
 // >>> GLIEDERUNGSPUNKT 1: KONFIGURATION
 // ============================================
 // WICHTIG: Ersetze diese Werte mit deinen eigenen Supabase-Credentials
-const SUPABASE_URL = "DEINE_SUPABASE_URL";
+const SUPABASE_URL = "DEIN_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY";
 
 // ============================================
@@ -53,7 +53,7 @@ function debugLog(...args) {
 
 // Prüfe Konfiguration
 if (
-  SUPABASE_URL === "DEINE_SUPABASE_URL" ||
+  SUPABASE_URL === "DEIN_SUPABASE_URL" ||
   SUPABASE_ANON_KEY === "DEIN_SUPABASE_ANON_KEY"
 ) {
   console.error(

@@ -77,7 +77,7 @@ console.log("Ersetze Platzhalter mit Environment Variables...");
 
 // SUPABASE_URL - Verwende Regex für robuste Ersetzung
 appJs = appJs.replace(
-  /const SUPABASE_URL\s*=\s*"DEINE_SUPABASE_URL"[^\n]*/,
+  /const SUPABASE_URL\s*=\s*"DEIN_SUPABASE_URL"[^\n]*/,
   `const SUPABASE_URL = "${SUPABASE_URL}";`
 );
 console.log(
@@ -140,14 +140,14 @@ if (STRIPE_PRICE_ELITE) {
 
 // Verifiziere dass Ersetzungen funktioniert haben
 if (
-  appJs.includes("DEINE_SUPABASE_URL") ||
+  appJs.includes("DEIN_SUPABASE_URL") ||
   appJs.includes("DEIN_SUPABASE_ANON_KEY")
 ) {
   console.error("\n❌ KRITISCHER FEHLER");
   console.error("Platzhalter wurden NICHT ersetzt!");
   console.error("App.js enthält noch:");
-  if (appJs.includes("DEINE_SUPABASE_URL"))
-    console.error("  - DEINE_SUPABASE_URL");
+  if (appJs.includes("DEIN_SUPABASE_URL"))
+    console.error("  - DEIN_SUPABASE_URL");
   if (appJs.includes("DEIN_SUPABASE_ANON_KEY"))
     console.error("  - DEIN_SUPABASE_ANON_KEY");
   console.error("\n⚠️ Build wird abgebrochen!");
