@@ -85,7 +85,7 @@ const demoContent = {
       id: 3,
       title: "HIIT Advanced",
       description: "Hochintensives Intervalltraining",
-      url: "https://example.com/video3.mp4",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/videos/basic/WhatsApp%20Video%202025-10-30%20at%2002.38.17.mp4",
       thumbnail:
         "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
@@ -94,7 +94,7 @@ const demoContent = {
       id: 4,
       title: "Yoga & Mobility",
       description: "Flexibilität und Entspannung",
-      url: "https://example.com/video4.mp4",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/videos/basic/WhatsApp%20Video%202025-10-30%20at%2002.38.17.mp4",
       thumbnail:
         "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
