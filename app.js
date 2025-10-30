@@ -20,21 +20,20 @@
 // 1. KONFIGURATION (Supabase & Stripe)
 // >>> GLIEDERUNGSPUNKT 1: KONFIGURATION
 // ============================================
-// WICHTIG: Ersetze diese Werte mit deinen eigenen Supabase-Credentials
+// WICHTIG: Diese Werte werden beim Build-Prozess automatisch ersetzt
 const SUPABASE_URL = "DEIN_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY";
 
 // ============================================
 // STRIPE KONFIGURATION
 // ============================================
-// WICHTIG: Ersetze dies mit deinem Stripe Publishable Key
-// Zu finden unter: https://dashboard.stripe.com/apikeys
-const STRIPE_PUBLISHABLE_KEY = "DEIN_STRIPE_PUBLISHABLE_KEY"; // z.B. 'pk_test_...'
+// WICHTIG: Diese Werte werden beim Build-Prozess automatisch ersetzt
+const STRIPE_PUBLISHABLE_KEY = "DEIN_STRIPE_PUBLISHABLE_KEY";
 
 // Stripe Preise (Price IDs aus Stripe Dashboard)
-// Erstelle diese unter: https://dashboard.stripe.com/products
+// Werden beim Build-Prozess automatisch ersetzt
 const STRIPE_PRICES = {
-  basic: "price_BASIC_ID", // z.B. 'price_1abc123...'
+  basic: "price_BASIC_ID",
   premium: "price_PREMIUM_ID",
   elite: "price_ELITE_ID",
 };
@@ -51,18 +50,8 @@ function debugLog(...args) {
   }
 }
 
-// Prüfe Konfiguration
-if (
-  SUPABASE_URL === "DEIN_SUPABASE_URL" ||
-  SUPABASE_ANON_KEY === "DEIN_SUPABASE_ANON_KEY"
-) {
-  console.error(
-    "❌ FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!"
-  );
-  alert(
-    "FEHLER: Supabase-Credentials fehlen! Bitte siehe app.js und README.md"
-  );
-}
+// ✅ Konfiguration wird beim Build-Prozess automatisch gesetzt (siehe build.js)
+// Keine manuelle Konfiguration erforderlich!
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
