@@ -1,6 +1,33 @@
 /* ============================================
-   APPLE-INSPIRED PREMIUM DESIGN - FITTICOACH
-   Glassmorphism • Smooth Animations • Premium Feel
+   CSS-GLIEDERUNG (Übersicht für schnelle Navigation)
+   ============================================ */
+/* Suche im Code nach: ">>> GLIEDERUNGSPUNKT X: BEZEICHNUNG"
+ * 
+ * 1. DESIGN-SYSTEM (Root-Variablen: Farben, Abstände, Typografie, Transitions)
+ * 2. BASE STYLES (HTML, Body, Selection, Scroll-Behavior)
+ * 3. CONTAINER & LAYOUT (Responsive Container mit Media Queries)
+ * 4. NAVIGATION (Sticky Nav mit Glassmorphism, Logo, Buttons)
+ * 5. BUTTONS (Allgemein, Primary, Secondary – Apple-Style mit Hover-Effekt)
+ * 6. HERO SECTION (Überschrift mit Gradient-Text, Subline, Hintergrund-Overlay)
+ * 7. PRICING SECTION (Grid-Layout, Überschrift, Beschreibung)
+ * 8. PRICING CARD (Glassmorphism, Hover-Animation, Featured-Zustand)
+ * 9. MEMBERS AREA (User-Info Card mit Glass-Effekt)
+ * 10. TABS (Apple-Style Tabs mit Scroll-Overflow, Active-State)
+ * 11. CONTENT GRID (Responsive Grid für Videos/Docs/Images)
+ * 12. CONTENT ITEM (Glass-Card mit Hover-Scaling, Bild, Badge, Zugriffssperre)
+ * 13. MODALS (Overlay mit Blur, Slide-In-Animation, Formulare)
+ * 14. ALERTS (Success, Error, Warning – Slide-Down-Animation)
+ * 15. LOADING STATES (Pulsierende Punkte-Animation)
+ * 16. UTILITIES (Text-Center, etc.)
+ * 17. ACCESSIBILITY & TOUCH (Tap-Highlight, Min-Height für Buttons)
+ * 18. SAFE AREAS (iPhone Notch-Support)
+ * 19. REDUCED MOTION (Barrierefreiheit: Animationen deaktivieren)
+ * 20. PRINT STYLES (Druck-optimierte Ansicht)
+ */
+
+/* ============================================
+   1. DESIGN-SYSTEM
+   >>> GLIEDERUNGSPUNKT 1: DESIGN-SYSTEM
    ============================================ */
 
 * {
@@ -62,7 +89,8 @@
 }
 
 /* ============================================
-   BASE STYLES
+   2. BASE STYLES
+   >>> GLIEDERUNGSPUNKT 2: BASE STYLES
    ============================================ */
 
 html {
@@ -87,7 +115,8 @@ body {
 }
 
 /* ============================================
-   CONTAINER & LAYOUT
+   3. CONTAINER & LAYOUT
+   >>> GLIEDERUNGSPUNKT 3: CONTAINER & LAYOUT
    ============================================ */
 
 .container {
@@ -109,7 +138,8 @@ body {
 }
 
 /* ============================================
-   NAVIGATION - APPLE STYLE
+   4. NAVIGATION - APPLE STYLE
+   >>> GLIEDERUNGSPUNKT 4: NAVIGATION
    ============================================ */
 
 nav {
@@ -158,7 +188,8 @@ nav .container {
 }
 
 /* ============================================
-   BUTTONS - APPLE STYLE
+   5. BUTTONS - APPLE STYLE
+   >>> GLIEDERUNGSPUNKT 5: BUTTONS
    ============================================ */
 
 .btn {
@@ -237,7 +268,8 @@ nav .container {
 }
 
 /* ============================================
-   HERO SECTION - APPLE STYLE
+   6. HERO SECTION - APPLE STYLE
+   >>> GLIEDERUNGSPUNKT 6: HERO SECTION
    ============================================ */
 
 .hero {
@@ -293,7 +325,8 @@ nav .container {
 }
 
 /* ============================================
-   PRICING SECTION - GLASS CARDS
+   7. PRICING SECTION - GLASS CARDS
+   >>> GLIEDERUNGSPUNKT 7: PRICING SECTION
    ============================================ */
 
 #pricing {
@@ -338,7 +371,8 @@ nav .container {
 }
 
 /* ============================================
-   GLASS PRICING CARD
+   8. GLASS PRICING CARD
+   >>> GLIEDERUNGSPUNKT 8: PRICING CARD
    ============================================ */
 
 .pricing-card {
@@ -440,7 +474,7 @@ nav .container {
 }
 
 .features li::before {
-  content: "✓";
+  content: "Checkmark";
   color: var(--success);
   font-weight: 700;
   margin-right: var(--space-sm);
@@ -472,7 +506,8 @@ nav .container {
 }
 
 /* ============================================
-   MEMBERS AREA
+   9. MEMBERS AREA
+   >>> GLIEDERUNGSPUNKT 9: MEMBERS AREA
    ============================================ */
 
 #membersArea {
@@ -504,7 +539,8 @@ nav .container {
 }
 
 /* ============================================
-   TABS - APPLE STYLE
+   10. TABS - APPLE STYLE
+   >>> GLIEDERUNGSPUNKT 10: TABS
    ============================================ */
 
 .tabs {
@@ -555,7 +591,8 @@ nav .container {
 }
 
 /* ============================================
-   CONTENT GRID
+   11. CONTENT GRID
+   >>> GLIEDERUNGSPUNKT 11: CONTENT GRID
    ============================================ */
 
 .content-grid {
@@ -597,7 +634,8 @@ nav .container {
 }
 
 /* ============================================
-   CONTENT CARDS - PREMIUM GLASS EFFECT
+   12. CONTENT CARDS - PREMIUM GLASS EFFECT
+   >>> GLIEDERUNGSPUNKT 12: CONTENT ITEM
    ============================================ */
 
 .content-item {
@@ -709,7 +747,8 @@ nav .container {
 }
 
 /* ============================================
-   MODALS - APPLE STYLE
+   13. MODALS - APPLE STYLE
+   >>> GLIEDERUNGSPUNKT 13: MODALS
    ============================================ */
 
 .modal {
@@ -821,7 +860,8 @@ nav .container {
 }
 
 /* ============================================
-   ALERTS - APPLE STYLE
+   14. ALERTS - APPLE STYLE
+   >>> GLIEDERUNGSPUNKT 14: ALERTS
    ============================================ */
 
 .alert {
@@ -863,7 +903,8 @@ nav .container {
 }
 
 /* ============================================
-   LOADING STATES
+   15. LOADING STATES
+   >>> GLIEDERUNGSPUNKT 15: LOADING STATES
    ============================================ */
 
 .loading {
@@ -893,7 +934,8 @@ nav .container {
 }
 
 /* ============================================
-   UTILITIES
+   16. UTILITIES
+   >>> GLIEDERUNGSPUNKT 16: UTILITIES
    ============================================ */
 
 .text-center {
@@ -901,7 +943,8 @@ nav .container {
 }
 
 /* ============================================
-   ACCESSIBILITY & TOUCH
+   17. ACCESSIBILITY & TOUCH
+   >>> GLIEDERUNGSPUNKT 17: ACCESSIBILITY & TOUCH
    ============================================ */
 
 button,
@@ -919,7 +962,8 @@ a {
 }
 
 /* ============================================
-   SAFE AREAS
+   18. SAFE AREAS
+   >>> GLIEDERUNGSPUNKT 18: SAFE AREAS
    ============================================ */
 
 @supports (padding: max(0px)) {
@@ -930,7 +974,8 @@ a {
 }
 
 /* ============================================
-   REDUCED MOTION
+   19. REDUCED MOTION
+   >>> GLIEDERUNGSPUNKT 19: REDUCED MOTION
    ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
@@ -944,7 +989,8 @@ a {
 }
 
 /* ============================================
-   PRINT STYLES
+   20. PRINT STYLES
+   >>> GLIEDERUNGSPUNKT 20: PRINT STYLES
    ============================================ */
 
 @media print {

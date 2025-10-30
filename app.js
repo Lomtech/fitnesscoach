@@ -1,5 +1,23 @@
 // ============================================
-// SUPABASE KONFIGURATION
+// CODE-GLIEDERUNG (Übersicht für schnelle Navigation)
+// ============================================
+// Suche im Code nach: "// >>> GLIEDERUNGSPUNKT X: BEZEICHNUNG"
+//
+// 1. KONFIGURATION (Supabase & Stripe)
+// 2. GLOBALE VARIABLEN & HILFSFUNKTIONEN
+// 3. DEMO-INHALTE & PLAN-HIERARCHIE
+// 4. INITIALISIERUNG (DOMContentLoaded)
+// 5. AUTHENTIFIZIERUNG (Session & Subscription laden)
+// 6. EVENT LISTENERS (Navigation, Modals, Forms, Tabs)
+// 7. LOGIN & REGISTRATION (handleLogin, handleRegister, logout)
+// 8. SUBSCRIPTION & PAYMENT (Klicken, Modal, Stripe/Demo-Zahlung)
+// 9. UI-UPDATES (angemeldet/abgemeldet, User-Info)
+// 10. CONTENT MANAGEMENT (Laden, Zugriffsprüfung, Item-Erstellung, Tab-Wechsel)
+// 11. UTILITY FUNCTIONS (Modal, Alert)
+
+// ============================================
+// 1. KONFIGURATION (Supabase & Stripe)
+// >>> GLIEDERUNGSPUNKT 1: KONFIGURATION
 // ============================================
 // WICHTIG: Ersetze diese Werte mit deinen eigenen Supabase-Credentials
 const SUPABASE_URL = "DEINE_SUPABASE_URL"; // z.B. 'https://xxxxx.supabase.co'
@@ -38,7 +56,7 @@ if (
   SUPABASE_ANON_KEY === "DEIN_SUPABASE_ANON_KEY"
 ) {
   console.error(
-    "❌ FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!"
+    "FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!"
   );
   alert(
     "FEHLER: Supabase-Credentials fehlen! Bitte siehe app.js und README.md"
@@ -53,13 +71,15 @@ debugLog("Supabase initialisiert:", {
 });
 
 // ============================================
-// GLOBALE VARIABLEN
+// 2. GLOBALE VARIABLEN & HILFSFUNKTIONEN
+// >>> GLIEDERUNGSPUNKT 2: GLOBALE VARIABLEN & HILFSFUNKTIONEN
 // ============================================
 let currentUser = null;
 let userSubscription = null;
 
 // ============================================
-// DEMO-INHALTE (In Produktion aus Supabase laden)
+// 3. DEMO-INHALTE & PLAN-HIERARCHIE
+// >>> GLIEDERUNGSPUNKT 3: DEMO-INHALTE & PLAN-HIERARCHIE
 // ============================================
 const demoContent = {
   videos: [
@@ -186,27 +206,27 @@ const planHierarchy = {
 };
 
 // ============================================
-// INITIALISIERUNG
+// 4. INITIALISIERUNG (DOMContentLoaded)
+// >>> GLIEDERUNGSPUNKT 4: INITIALISIERUNG
 // ============================================
 document.addEventListener("DOMContentLoaded", async () => {
   // Debug: Zeige Stripe Key
-  debugLog("🔑 STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
+  debugLog("STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
   debugLog(
-    "🔑 Ist Platzhalter?",
+    "Ist Platzhalter?",
     STRIPE_PUBLISHABLE_KEY === "DEIN_STRIPE_PUBLISHABLE_KEY"
   );
 
   // Prüfe ob Stripe.js geladen wurde
-  debugLog("🔍 Stripe Objekt verfügbar?", typeof Stripe !== "undefined");
+  debugLog("Stripe Objekt verfügbar?", typeof Stripe !== "undefined");
 
   // Initialisiere Stripe
   if (STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY") {
-    debugLog("✅ Stripe Key ist gesetzt, versuche zu initialisieren...");
+    debugLog("Stripe Key ist gesetzt, versuche zu initialisieren...");
 
-    // Prüfe ob Stripe.js Bibliothek geladen ist
     if (typeof Stripe === "undefined") {
       console.error(
-        "❌ Stripe.js Bibliothek nicht geladen! Prüfe index.html <script> Tag"
+        "Stripe.js Bibliothek nicht geladen! Prüfe index.html <script> Tag"
       );
       showAlert(
         "Stripe.js konnte nicht geladen werden. Bitte Seite neu laden.",
@@ -215,11 +235,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       try {
         stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-        debugLog("✅ Stripe erfolgreich initialisiert:", stripe);
-        console.log("✅ Stripe ist bereit für Zahlungen!");
+        debugLog("Stripe erfolgreich initialisiert:", stripe);
+        console.log("Stripe ist bereit für Zahlungen!");
       } catch (error) {
-        console.error("❌ Stripe Initialisierungsfehler:", error);
-        console.error("❌ Key:", STRIPE_PUBLISHABLE_KEY);
+        console.error("Stripe Initialisierungsfehler:", error);
+        console.error("Key:", STRIPE_PUBLISHABLE_KEY);
         showAlert(
           "Stripe konnte nicht geladen werden. Zahlungen sind deaktiviert.",
           "error"
@@ -228,9 +248,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   } else {
     console.warn(
-      "⚠️ Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
+      "Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
     );
-    console.warn("⚠️ Aktueller Wert:", STRIPE_PUBLISHABLE_KEY);
+    console.warn("Aktueller Wert:", STRIPE_PUBLISHABLE_KEY);
   }
 
   await checkUserSession();
@@ -238,7 +258,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ============================================
-// AUTHENTIFIZIERUNG
+// 5. AUTHENTIFIZIERUNG (Session & Subscription laden)
+// >>> GLIEDERUNGSPUNKT 5: AUTHENTIFIZIERUNG
 // ============================================
 async function checkUserSession() {
   const {
@@ -268,7 +289,8 @@ async function loadUserSubscription() {
 }
 
 // ============================================
-// EVENT LISTENERS
+// 6. EVENT LISTENERS (Navigation, Modals, Forms, Tabs)
+// >>> GLIEDERUNGSPUNKT 6: EVENT LISTENERS
 // ============================================
 function initializeEventListeners() {
   // Navigation
@@ -331,7 +353,8 @@ function initializeEventListeners() {
 }
 
 // ============================================
-// LOGIN & REGISTRATION
+// 7. LOGIN & REGISTRATION (handleLogin, handleRegister, logout)
+// >>> GLIEDERUNGSPUNKT 7: LOGIN & REGISTRATION
 // ============================================
 async function handleLogin(e) {
   e.preventDefault();
@@ -349,12 +372,12 @@ async function handleLogin(e) {
   debugLog("Login-Antwort:", { data, error });
 
   if (error) {
-    console.error("❌ Login error:", error);
+    console.error("Login error:", error);
     showAlert("Anmeldung fehlgeschlagen: " + error.message, "error");
     return;
   }
 
-  debugLog("✅ Login erfolgreich!");
+  debugLog("Login erfolgreich!");
   currentUser = data.user;
   await loadUserSubscription();
   updateUIForLoggedInUser();
@@ -375,7 +398,6 @@ async function handleRegister(e) {
     passwordLength: password.length,
   });
 
-  // Validierung
   if (password.length < 6) {
     showAlert("Passwort muss mindestens 6 Zeichen lang sein", "error");
     return;
@@ -398,14 +420,13 @@ async function handleRegister(e) {
     debugLog("Supabase Antwort:", { data, error });
 
     if (error) {
-      console.error("❌ Registration error:", error);
+      console.error("Registration error:", error);
       console.error("Error details:", {
         message: error.message,
         status: error.status,
         name: error.name,
       });
 
-      // Spezifische Fehlermeldungen
       if (error.message.includes("User already registered")) {
         showAlert(
           "Diese E-Mail ist bereits registriert. Bitte melde dich an.",
@@ -413,17 +434,15 @@ async function handleRegister(e) {
         );
       } else if (error.message.includes("Database error")) {
         showAlert(
-          "❌ Datenbankfehler! Bitte öffne die Browser-Konsole (F12) für Details.",
+          "Datenbankfehler! Bitte öffne die Browser-Konsole (F12) für Details.",
           "error"
         );
         console.error(
-          "💡 LÖSUNG: Gehe zu Supabase → Authentication → Providers → Email"
+          "LÖSUNG: Gehe zu Supabase → Authentication → Providers → Email"
         );
+        console.error('Deaktiviere "Confirm email" und "Secure email change"');
         console.error(
-          '💡 Deaktiviere "Confirm email" und "Secure email change"'
-        );
-        console.error(
-          "💡 Stelle sicher, dass die subscriptions-Tabelle existiert"
+          "Stelle sicher, dass die subscriptions-Tabelle existiert"
         );
       } else if (error.message.includes("Unable to validate email")) {
         showAlert(
@@ -436,10 +455,9 @@ async function handleRegister(e) {
       return;
     }
 
-    debugLog("✅ Registrierung erfolgreich!", data);
+    debugLog("Registrierung erfolgreich!", data);
     hideModal("registerModal");
 
-    // Prüfe ob E-Mail-Bestätigung erforderlich ist
     if (
       data.user &&
       data.user.identities &&
@@ -449,10 +467,9 @@ async function handleRegister(e) {
         "Registrierung erfolgreich! Bitte bestätige deine E-Mail, um dich anzumelden.",
         "success"
       );
-      debugLog("⚠️ E-Mail-Bestätigung erforderlich");
+      debugLog("E-Mail-Bestätigung erforderlich");
     } else if (data.session) {
-      // Auto-Login wenn keine E-Mail-Bestätigung erforderlich
-      debugLog("✅ Auto-Login aktiv");
+      debugLog("Auto-Login aktiv");
       currentUser = data.user;
       await loadUserSubscription();
       updateUIForLoggedInUser();
@@ -462,10 +479,10 @@ async function handleRegister(e) {
         "Registrierung erfolgreich! Du kannst dich jetzt anmelden.",
         "success"
       );
-      debugLog("ℹ️ Manuelle Anmeldung erforderlich");
+      debugLog("Manuelle Anmeldung erforderlich");
     }
   } catch (err) {
-    console.error("❌ Unexpected error:", err);
+    console.error("Unexpected error:", err);
     showAlert(
       "Ein unerwarteter Fehler ist aufgetreten. Siehe Browser-Konsole (F12).",
       "error"
@@ -482,7 +499,8 @@ async function logout() {
 }
 
 // ============================================
-// SUBSCRIPTION & PAYMENT
+// 8. SUBSCRIPTION & PAYMENT
+// >>> GLIEDERUNGSPUNKT 8: SUBSCRIPTION & PAYMENT
 // ============================================
 function handleSubscriptionClick(e) {
   const plan = e.target.getAttribute("data-plan");
@@ -530,27 +548,22 @@ async function handlePayment(e) {
 
   const plan = e.target.getAttribute("data-plan");
 
-  // Prüfe ob Stripe verfügbar ist
   if (!stripe) {
     showAlert(
-      "⚠️ Stripe ist nicht konfiguriert. Demo-Modus wird verwendet.",
+      "Stripe ist nicht konfiguriert. Demo-Modus wird verwendet.",
       "warning"
     );
-    // Fallback auf Demo-Zahlung
     return handleDemoPayment(plan);
   }
 
-  debugLog("💳 Starte Stripe Checkout für Plan:", plan);
+  debugLog("Starte Stripe Checkout für Plan:", plan);
 
   try {
-    // Zeige Loading
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = "Wird geladen...";
 
-    // Erstelle Checkout Session über deine Backend-Funktion
-    // Option 1: Stripe Checkout (empfohlen für schnellen Start)
     const { error: stripeError } = await stripe.redirectToCheckout({
       lineItems: [
         {
@@ -578,9 +591,6 @@ async function handlePayment(e) {
       submitBtn.disabled = false;
       submitBtn.textContent = originalText;
     }
-
-    // Hinweis: Nach erfolgreichem Checkout wird der Benutzer zu successUrl weitergeleitet
-    // Dort solltest du dann die Subscription in Supabase erstellen (siehe success.html)
   } catch (error) {
     console.error("Payment error:", error);
     showAlert("Ein Fehler ist aufgetreten. Bitte versuche es erneut.", "error");
@@ -589,16 +599,13 @@ async function handlePayment(e) {
   }
 }
 
-// Fallback Demo-Zahlung wenn Stripe nicht konfiguriert
 async function handleDemoPayment(plan) {
-  debugLog("🎭 Demo-Zahlung für Plan:", plan);
+  debugLog("Demo-Zahlung für Plan:", plan);
 
   showAlert("Zahlung wird verarbeitet... (Demo-Modus)", "success");
 
-  // Simuliere Verzögerung
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
-  // Erstelle Subscription in Supabase
   const { data, error } = await supabase
     .from("subscriptions")
     .insert([
@@ -607,7 +614,7 @@ async function handleDemoPayment(plan) {
         plan: plan,
         status: "active",
         start_date: new Date().toISOString(),
-        end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 Tage
+        end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       },
     ])
     .select()
@@ -623,20 +630,20 @@ async function handleDemoPayment(plan) {
   hideModal("paymentModal");
   updateUIForLoggedInUser();
   showAlert(
-    "✅ Zahlung erfolgreich! Willkommen im Mitgliederbereich! (Demo)",
+    "Zahlung erfolgreich! Willkommen im Mitgliederbereich! (Demo)",
     "success"
   );
 }
 
 // ============================================
-// UI UPDATES
+// 9. UI-UPDATES (angemeldet/abgemeldet, User-Info)
+// >>> GLIEDERUNGSPUNKT 9: UI-UPDATES
 // ============================================
 function updateUIForLoggedInUser() {
   document.getElementById("loginBtn").style.display = "none";
   document.getElementById("logoutBtn").style.display = "block";
 
   if (userSubscription) {
-    // Verstecke Preissektion wenn User ein Abo hat
     const pricingSection = document.getElementById("pricing");
     if (pricingSection) {
       pricingSection.style.display = "none";
@@ -646,7 +653,6 @@ function updateUIForLoggedInUser() {
     displayUserInfo();
     loadContent();
   } else {
-    // Kein Abo - Zeige Preise
     const pricingSection = document.getElementById("pricing");
     if (pricingSection) {
       pricingSection.style.display = "block";
@@ -660,7 +666,6 @@ function updateUIForLoggedOutUser() {
   document.getElementById("logoutBtn").style.display = "none";
   document.getElementById("membersArea").style.display = "none";
 
-  // Zeige Preissektion für nicht angemeldete User
   const pricingSection = document.getElementById("pricing");
   if (pricingSection) {
     pricingSection.style.display = "block";
@@ -676,7 +681,7 @@ function displayUserInfo() {
   };
 
   document.getElementById("userInfo").innerHTML = `
-        <h3>Willkommen, ${userName}! 👋</h3>
+        <h3>Willkommen, ${userName}! </h3>
         <p><strong>Aktueller Plan:</strong> ${
           planNames[userSubscription.plan]
         }</p>
@@ -688,7 +693,8 @@ function displayUserInfo() {
 }
 
 // ============================================
-// CONTENT MANAGEMENT
+// 10. CONTENT MANAGEMENT (Laden, Zugriffsprüfung, Item-Erstellung, Tab-Wechsel)
+// >>> GLIEDERUNGSPUNKT 10: CONTENT MANAGEMENT
 // ============================================
 function loadContent() {
   loadVideos();
@@ -755,7 +761,6 @@ function createContentItem(content, type, hasAccess) {
     }>`;
   }
 
-  // Erstelle Viewer URL mit Parametern
   let viewerUrl = "";
   if (hasAccess) {
     viewerUrl = `viewer.html?url=${encodeURIComponent(
@@ -770,7 +775,7 @@ function createContentItem(content, type, hasAccess) {
   div.innerHTML = `
         ${mediaElement}
         <div class="content-info">
-            <h4>${content.title} ${!hasAccess ? "🔒" : ""}</h4>
+            <h4>${content.title} ${!hasAccess ? "" : ""}</h4>
             <p>${content.description}</p>
             ${planBadges[content.requiredPlan]}
             ${
@@ -785,13 +790,11 @@ function createContentItem(content, type, hasAccess) {
 }
 
 function switchTab(tabName) {
-  // Update buttons
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.remove("active");
   });
   document.querySelector(`[data-tab="${tabName}"]`).classList.add("active");
 
-  // Update content
   document.querySelectorAll(".tab-content").forEach((content) => {
     content.classList.remove("active");
   });
@@ -799,7 +802,8 @@ function switchTab(tabName) {
 }
 
 // ============================================
-// UTILITY FUNCTIONS
+// 11. UTILITY FUNCTIONS (Modal, Alert)
+// >>> GLIEDERUNGSPUNKT 11: UTILITY FUNCTIONS
 // ============================================
 function showModal(modalId) {
   document.getElementById(modalId).style.display = "block";
