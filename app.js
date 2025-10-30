@@ -33,6 +33,22 @@ function debugLog(...args) {
 }
 
 // Prüfe Konfiguration
+if (
+  SUPABASE_URL === "DEINE_SUPABASE_URL" ||
+  SUPABASE_ANON_KEY === "DEIN_SUPABASE_ANON_KEY"
+) {
+  console.error(
+    `❌ FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!\n` +
+      `   Aktueller Wert von SUPABASE_URL: "${SUPABASE_URL}"\n` +
+      `   Aktueller Wert von SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY}"`
+  );
+  alert(
+    `FEHLER: Supabase-Credentials fehlen!\n` +
+      `Bitte siehe app.js und README.md.\n\n` +
+      `SUPABASE_URL: "${SUPABASE_URL}"\n` +
+      `SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY}"`
+  );
+}
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
