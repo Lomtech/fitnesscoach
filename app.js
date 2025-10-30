@@ -38,15 +38,10 @@ if (
   SUPABASE_ANON_KEY === "DEIN_SUPABASE_ANON_KEY"
 ) {
   console.error(
-    `❌ FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!\n` +
-      `   Aktueller Wert von SUPABASE_URL: "${SUPABASE_URL}"\n` +
-      `   Aktueller Wert von SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY}"`
+    "❌ FEHLER: Bitte konfiguriere deine Supabase-Credentials in app.js!"
   );
   alert(
-    `FEHLER: Supabase-Credentials fehlen!\n` +
-      `Bitte siehe app.js und README.md.\n\n` +
-      `SUPABASE_URL: "${SUPABASE_URL}"\n` +
-      `SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY}"`
+    "FEHLER: Supabase-Credentials fehlen! Bitte siehe app.js und README.md"
   );
 }
 
@@ -190,22 +185,48 @@ const planHierarchy = {
 // INITIALISIERUNG
 // ============================================
 document.addEventListener("DOMContentLoaded", async () => {
+  // Debug: Zeige Stripe Key
+  debugLog("🔑 STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
+  debugLog(
+    "🔑 Ist Platzhalter?",
+    STRIPE_PUBLISHABLE_KEY === "DEIN_STRIPE_PUBLISHABLE_KEY"
+  );
+
+  // Prüfe ob Stripe.js geladen wurde
+  debugLog("🔍 Stripe Objekt verfügbar?", typeof Stripe !== "undefined");
+
   // Initialisiere Stripe
   if (STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY") {
-    try {
-      stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-      debugLog("✅ Stripe initialisiert");
-    } catch (error) {
-      console.error("❌ Stripe Initialisierungsfehler:", error);
+    debugLog("✅ Stripe Key ist gesetzt, versuche zu initialisieren...");
+
+    // Prüfe ob Stripe.js Bibliothek geladen ist
+    if (typeof Stripe === "undefined") {
+      console.error(
+        "❌ Stripe.js Bibliothek nicht geladen! Prüfe index.html <script> Tag"
+      );
       showAlert(
-        "Stripe konnte nicht geladen werden. Zahlungen sind deaktiviert.",
+        "Stripe.js konnte nicht geladen werden. Bitte Seite neu laden.",
         "error"
       );
+    } else {
+      try {
+        stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        debugLog("✅ Stripe erfolgreich initialisiert:", stripe);
+        console.log("✅ Stripe ist bereit für Zahlungen!");
+      } catch (error) {
+        console.error("❌ Stripe Initialisierungsfehler:", error);
+        console.error("❌ Key:", STRIPE_PUBLISHABLE_KEY);
+        showAlert(
+          "Stripe konnte nicht geladen werden. Zahlungen sind deaktiviert.",
+          "error"
+        );
+      }
     }
   } else {
     console.warn(
       "⚠️ Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
     );
+    console.warn("⚠️ Aktueller Wert:", STRIPE_PUBLISHABLE_KEY);
   }
 
   await checkUserSession();
