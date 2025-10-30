@@ -177,6 +177,7 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
     /const SUPABASE_URL\s*=\s*['"].*?['"];/,
     `const SUPABASE_URL = "${SUPABASE_URL}";`
   );
+  //Test
 
   // SUPABASE_ANON_KEY
   appJs = appJs.replace(
