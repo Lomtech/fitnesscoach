@@ -211,7 +211,7 @@ nav .container {
 .btn-primary {
   background: var(--primary);
   color: var(--white);
-  border-radius: 12px
+  border-radius: 12px;
 }
 
 .btn-primary:hover {
