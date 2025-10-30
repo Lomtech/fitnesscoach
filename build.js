@@ -157,7 +157,7 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
 }
 
 // Kopiere andere Dateien
-const filesToCopy = ["index.html", "styles.css"];
+const filesToCopy = ["index.html", "styles.css", "viewer.html"];
 
 filesToCopy.forEach((file) => {
   if (fs.existsSync(path.join(__dirname, file))) {

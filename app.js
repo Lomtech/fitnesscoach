@@ -67,7 +67,7 @@ const demoContent = {
       id: 1,
       title: "Ganzkörper-Workout",
       description: "Komplettes 30-Minuten Training",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://example.com/video1.mp4",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=Ganzk%C3%B6rper",
       requiredPlan: "basic",
@@ -76,7 +76,7 @@ const demoContent = {
       id: 2,
       title: "Core-Strengthening",
       description: "Intensives Bauchmuskeltraining",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://example.com/video2.mp4",
       thumbnail: "https://via.placeholder.com/400x200/004e89/ffffff?text=Core",
       requiredPlan: "basic",
     },
@@ -110,7 +110,7 @@ const demoContent = {
       id: 1,
       title: "12-Wochen Trainingsplan",
       description: "Strukturierter Aufbauplan",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://example.com/doc1.pdf",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=12-Wochen",
       requiredPlan: "basic",
@@ -148,7 +148,7 @@ const demoContent = {
       id: 1,
       title: "Übungskatalog Basics",
       description: "Alle grundlegenden Übungen",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://via.placeholder.com/600x400/ff6b35/ffffff?text=%C3%9Cbungen+Basics",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=%C3%9Cbungen",
       requiredPlan: "basic",
@@ -734,6 +734,18 @@ function createContentItem(content, type, hasAccess) {
     }>`;
   }
 
+  // Erstelle Viewer URL mit Parametern
+  let viewerUrl = "";
+  if (hasAccess) {
+    viewerUrl = `viewer.html?url=${encodeURIComponent(
+      content.url
+    )}&title=${encodeURIComponent(
+      content.title
+    )}&description=${encodeURIComponent(
+      content.description
+    )}&type=${type}&plan=${content.requiredPlan}`;
+  }
+
   div.innerHTML = `
         ${mediaElement}
         <div class="content-info">
@@ -742,7 +754,7 @@ function createContentItem(content, type, hasAccess) {
             ${planBadges[content.requiredPlan]}
             ${
               hasAccess
-                ? `<br><a href="${content.url}" target="_blank" class="btn-primary" style="display: inline-block; margin-top: 10px; padding: 0.5rem 1rem; text-decoration: none;">Ansehen</a>`
+                ? `<br><a href="${viewerUrl}" class="btn-primary" style="display: inline-block; margin-top: 10px; padding: 0.5rem 1rem; text-decoration: none;">Ansehen</a>`
                 : '<p style="color: var(--danger); margin-top: 10px;">Upgrade erforderlich</p>'
             }
         </div>
