@@ -19,13 +19,13 @@
 const fs = require("fs");
 const path = require("path");
 
-console.log("Stararte Build-Prozess (DSGVO-Edition)...");
+console.log("Starte Build-Prozess (DSGVO-Edition)...");
 
 // Erstelle dist Ordner
 const distDir = path.join(__dirname, "dist");
 if (!fs.existsSync(distDir)) {
   fs.mkdirSync(distDir);
-  console.log("dist Ordner erstellt");
+  console.log("✅ dist Ordner erstellt");
 }
 
 // Hole Environment Variables
@@ -41,99 +41,101 @@ const STRIPE_PRICE_ELITE = process.env.STRIPE_PRICE_ELITE;
 // >>> GLIEDERUNGSPUNKT 2: VALIDIERUNG DER ENV-VARIABLEN
 // ============================================
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error("FEHLER: Supabase Environment Variables fehlen!");
+  console.error("❌ FEHLER: Supabase Environment Variables fehlen!");
   console.error("Benötigt: SUPABASE_URL, SUPABASE_ANON_KEY");
   process.exit(1);
 }
 
 if (!STRIPE_PUBLISHABLE_KEY) {
   console.warn(
-    "WARNUNG: STRIPE_PUBLISHABLE_KEY fehlt - Demo-Modus wird verwendet"
+    "⚠️ WARNUNG: STRIPE_PUBLISHABLE_KEY fehlt - Demo-Modus wird verwendet"
   );
 }
 
-console.log("Environment Variables geladen");
-console.log("   - SUPABASE_URL:", SUPABASE_URL);
+console.log("\n📋 Environment Variables geladen:");
+console.log("   ✅ SUPABASE_URL:", SUPABASE_URL);
 console.log(
-  "   - SUPABASE_ANON_KEY:",
+  "   ✅ SUPABASE_ANON_KEY:",
   SUPABASE_ANON_KEY.substring(0, 20) + "..."
 );
 console.log(
-  "   - STRIPE_PUBLISHABLE_KEY:",
+  "   " + (STRIPE_PUBLISHABLE_KEY ? "✅" : "⚠️") + " STRIPE_PUBLISHABLE_KEY:",
   STRIPE_PUBLISHABLE_KEY
     ? STRIPE_PUBLISHABLE_KEY.substring(0, 20) + "..."
-    : "nicht gesetzt"
+    : "nicht gesetzt (Demo-Modus)"
 );
 
 // ============================================
 // 3. APP.JS VERARBEITEN
 // >>> GLIEDERUNGSPUNKT 3: APP.JS VERARBEITEN
 // ============================================
-console.log("");
-console.log("Verarbeite app.js...");
+console.log("\n🔧 Verarbeite app.js...");
 
 let appJs = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
 
 console.log("Ersetze Platzhalter mit Environment Variables...");
 
-// SUPABASE_URL - Ersetze die GANZE Zeile inklusive Kommentar
-const supabaseUrlLine = `const SUPABASE_URL = "DEINE_SUPABASE_URL"; // z.B. 'https://xxxxx.supabase.co'`;
-const newSupabaseUrlLine = `const SUPABASE_URL = "${SUPABASE_URL}";`;
-appJs = appJs.replace(supabaseUrlLine, newSupabaseUrlLine);
+// SUPABASE_URL - Verwende Regex für robuste Ersetzung
+appJs = appJs.replace(
+  /const SUPABASE_URL\s*=\s*"DEINE_SUPABASE_URL"[^\n]*/,
+  `const SUPABASE_URL = "${SUPABASE_URL}";`
+);
 console.log(
   "   SUPABASE_URL:",
-  appJs.includes(SUPABASE_URL) ? "ersetzt" : "FEHLER"
+  appJs.includes(SUPABASE_URL) ? "✅ ersetzt" : "❌ FEHLER"
 );
 
-// SUPABASE_ANON_KEY - Ersetze die komplette Zeile
-const supabaseKeyLine = `const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY";`;
-const newSupabaseKeyLine = `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`;
-appJs = appJs.replace(supabaseKeyLine, newSupabaseKeyLine);
+// SUPABASE_ANON_KEY - Verwende Regex
+appJs = appJs.replace(
+  /const SUPABASE_ANON_KEY\s*=\s*"DEIN_SUPABASE_ANON_KEY"[^\n]*/,
+  `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`
+);
 console.log(
   "   SUPABASE_ANON_KEY:",
-  appJs.includes(SUPABASE_ANON_KEY) ? "ersetzt" : "FEHLER"
+  appJs.includes(SUPABASE_ANON_KEY) ? "✅ ersetzt" : "❌ FEHLER"
 );
 
-// STRIPE_PUBLISHABLE_KEY - Ersetze die GANZE Zeile inklusive Kommentar
-const stripeKeyLine = `const STRIPE_PUBLISHABLE_KEY = "DEIN_STRIPE_PUBLISHABLE_KEY"; // z.B. 'pk_test_...'`;
-const newStripeKeyLine = `const STRIPE_PUBLISHABLE_KEY = "${
-  STRIPE_PUBLISHABLE_KEY || "DEIN_STRIPE_PUBLISHABLE_KEY"
-}";`;
-appJs = appJs.replace(stripeKeyLine, newStripeKeyLine);
+// STRIPE_PUBLISHABLE_KEY - Verwende Regex
+appJs = appJs.replace(
+  /const STRIPE_PUBLISHABLE_KEY\s*=\s*"DEIN_STRIPE_PUBLISHABLE_KEY"[^\n]*/,
+  `const STRIPE_PUBLISHABLE_KEY = "${
+    STRIPE_PUBLISHABLE_KEY || "DEIN_STRIPE_PUBLISHABLE_KEY"
+  }";`
+);
 console.log(
   "   STRIPE_PUBLISHABLE_KEY:",
-  STRIPE_PUBLISHABLE_KEY ? "ersetzt" : "nicht gesetzt"
+  STRIPE_PUBLISHABLE_KEY ? "✅ ersetzt" : "⚠️ nicht gesetzt"
 );
 
 // Ersetze Price IDs
 if (STRIPE_PRICE_BASIC) {
   appJs = appJs.replace(
-    `basic: "price_BASIC_ID", // z.B. 'price_1abc123...'`,
+    /basic:\s*"price_BASIC_ID"[^\n]*/,
     `basic: "${STRIPE_PRICE_BASIC}",`
   );
-  console.log("   STRIPE_PRICE_BASIC: ersetzt");
+  console.log("   STRIPE_PRICE_BASIC: ✅ ersetzt");
 } else {
-  console.log("   STRIPE_PRICE_BASIC: nicht gesetzt");
+  console.log("   STRIPE_PRICE_BASIC: ⚠️ nicht gesetzt");
 }
 
 if (STRIPE_PRICE_PREMIUM) {
   appJs = appJs.replace(
-    `premium: "price_PREMIUM_ID",`,
+    /premium:\s*"price_PREMIUM_ID"[^\n]*/,
     `premium: "${STRIPE_PRICE_PREMIUM}",`
   );
-  console.log("   STRIPE_PRICE_PREMIUM: ersetzt");
+  console.log("   STRIPE_PRICE_PREMIUM: ✅ ersetzt");
 } else {
-  console.log("   STRIPE_PRICE_PREMIUM: nicht gesetzt");
+  console.log("   STRIPE_PRICE_PREMIUM: ⚠️ nicht gesetzt");
 }
 
 if (STRIPE_PRICE_ELITE) {
   appJs = appJs.replace(
-    `elite: "price_ELITE_ID",`,
+    /elite:\s*"price_ELITE_ID"[^\n]*/,
     `elite: "${STRIPE_PRICE_ELITE}",`
   );
-  console.log("   STRIPE_PRICE_ELITE: ersetzt");
+  console.log("   STRIPE_PRICE_ELITE: ✅ ersetzt");
 } else {
-  console.log("   STRIPE_PRICE_ELITE: nicht gesetzt");
+  console.log("   STRIPE_PRICE_ELITE: ⚠️ nicht gesetzt");
 }
 
 // Verifiziere dass Ersetzungen funktioniert haben
@@ -141,29 +143,26 @@ if (
   appJs.includes("DEINE_SUPABASE_URL") ||
   appJs.includes("DEIN_SUPABASE_ANON_KEY")
 ) {
-  console.error("");
-  console.error("KRITISCHER FEHLER");
+  console.error("\n❌ KRITISCHER FEHLER");
   console.error("Platzhalter wurden NICHT ersetzt!");
   console.error("App.js enthält noch:");
   if (appJs.includes("DEINE_SUPABASE_URL"))
     console.error("  - DEINE_SUPABASE_URL");
   if (appJs.includes("DEIN_SUPABASE_ANON_KEY"))
     console.error("  - DEIN_SUPABASE_ANON_KEY");
-  console.error("");
-  console.error("Trotzdem fortfahren...");
-  console.error("");
+  console.error("\n⚠️ Build wird abgebrochen!");
+  process.exit(1);
 }
 
 // Schreibe app.js in dist
 fs.writeFileSync(path.join(distDir, "app.js"), appJs);
-console.log("app.js erstellt");
+console.log("✅ app.js erstellt");
 
 // ============================================
 // 4. SUCCESS.HTML VERARBEITEN
 // >>> GLIEDERUNGSPUNKT 4: SUCCESS.HTML VERARBEITEN
 // ============================================
-console.log("");
-console.log("Verarbeite success.html...");
+console.log("\n🔧 Verarbeite success.html...");
 
 if (fs.existsSync(path.join(__dirname, "success.html"))) {
   let successHtml = fs.readFileSync(
@@ -171,40 +170,37 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
     "utf8"
   );
 
-  // Ersetze die kompletten Zeilen
-  // SUPABASE_URL
+  // Ersetze die kompletten Zeilen mit Regex
   successHtml = successHtml.replace(
     /const SUPABASE_URL\s*=\s*['"].*?['"];/,
     `const SUPABASE_URL = "${SUPABASE_URL}";`
   );
 
-  // SUPABASE_ANON_KEY
   successHtml = successHtml.replace(
     /const SUPABASE_ANON_KEY\s*=\s*['"].*?['"];/,
     `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`
   );
 
   fs.writeFileSync(path.join(distDir, "success.html"), successHtml);
-  console.log("success.html erstellt");
+  console.log("✅ success.html erstellt");
 } else {
-  console.warn("success.html nicht gefunden - wird übersprungen");
+  console.warn("⚠️ success.html nicht gefunden - wird übersprungen");
 }
 
 // ============================================
 // 5. HAUPTDATEIEN KOPIEREN
 // >>> GLIEDERUNGSPUNKT 5: HAUPTDATEIEN KOPIEREN
 // ============================================
-console.log("");
-console.log("Kopiere Hauptdateien...");
+console.log("\n📁 Kopiere Hauptdateien...");
 
 const mainFiles = ["index.html", "styles.css", "viewer.html"];
 
 mainFiles.forEach((file) => {
   if (fs.existsSync(path.join(__dirname, file))) {
     fs.copyFileSync(path.join(__dirname, file), path.join(distDir, file));
-    console.log(`${file} kopiert`);
+    console.log(`   ✅ ${file} kopiert`);
   } else {
-    console.warn(`${file} nicht gefunden`);
+    console.warn(`   ⚠️ ${file} nicht gefunden`);
   }
 });
 
@@ -212,8 +208,7 @@ mainFiles.forEach((file) => {
 // 6. DSGVO-SEITEN KOPIEREN
 // >>> GLIEDERUNGSPUNKT 6: DSGVO-SEITEN KOPIEREN
 // ============================================
-console.log("");
-console.log("Kopiere DSGVO-Seiten...");
+console.log("\n📄 Kopiere DSGVO-Seiten...");
 
 const legalFiles = [
   "impressum.html",
@@ -226,32 +221,29 @@ let copiedLegalFiles = 0;
 legalFiles.forEach((file) => {
   if (fs.existsSync(path.join(__dirname, file))) {
     fs.copyFileSync(path.join(__dirname, file), path.join(distDir, file));
-    console.log(`${file} kopiert`);
+    console.log(`   ✅ ${file} kopiert`);
     copiedLegalFiles++;
   } else {
-    console.warn(`${file} nicht gefunden - sollte vorhanden sein!`);
+    console.warn(`   ⚠️ ${file} nicht gefunden - sollte vorhanden sein!`);
   }
 });
 
 if (copiedLegalFiles < 4) {
-  console.warn("");
-  console.warn("WARNUNG");
+  console.warn("\n⚠️ WARNUNG");
   console.warn(`Nur ${copiedLegalFiles}/4 DSGVO-Seiten gefunden!`);
   console.warn("Fehlende Seiten können zu rechtlichen Problemen führen.");
-  console.warn("");
 }
 
 // ============================================
 // 7. NETLIFY KONFIGURATION
 // >>> GLIEDERUNGSPUNKT 7: NETLIFY KONFIGURATION
 // ============================================
-console.log("");
-console.log("Erstelle Netlify-Konfiguration...");
+console.log("\n⚙️ Erstelle Netlify-Konfiguration...");
 
 // _redirects für Single Page Application
 const redirectsContent = `/*  /index.html  200`;
 fs.writeFileSync(path.join(distDir, "_redirects"), redirectsContent);
-console.log("_redirects erstellt");
+console.log("   ✅ _redirects erstellt");
 
 // netlify.toml (optional, aber empfohlen)
 const netlifyToml = `# Netlify Konfiguration für FittiCoach
@@ -293,18 +285,16 @@ const netlifyToml = `# Netlify Konfiguration für FittiCoach
 `;
 
 fs.writeFileSync(path.join(__dirname, "netlify.toml"), netlifyToml);
-console.log("netlify.toml erstellt");
+console.log("   ✅ netlify.toml erstellt");
 
 // ============================================
 // 8. BUILD-ZUSAMMENFASSUNG
 // >>> GLIEDERUNGSPUNKT 8: BUILD-ZUSAMMENFASSUNG
 // ============================================
-console.log("");
+console.log("\n═════════════════════════════════════════════");
+console.log("✅ Build erfolgreich abgeschlossen!");
 console.log("═════════════════════════════════════════════");
-console.log("Build erfolgreich abgeschlossen!");
-console.log("═════════════════════════════════════════════");
-console.log("");
-console.log("Build-Statistik:");
+console.log("\n📦 Build-Statistik:");
 console.log("   dist/");
 console.log("   ├── app.js");
 console.log("   ├── index.html");
@@ -318,62 +308,63 @@ if (fs.existsSync(path.join(distDir, "success.html"))) {
 console.log("   │");
 console.log("   ├── DSGVO-Seiten:");
 if (fs.existsSync(path.join(distDir, "impressum.html"))) {
-  console.log("   ├── impressum.html");
+  console.log("   │   ├── impressum.html");
 }
 if (fs.existsSync(path.join(distDir, "datenschutz.html"))) {
-  console.log("   ├── datenschutz.html");
+  console.log("   │   ├── datenschutz.html");
 }
 if (fs.existsSync(path.join(distDir, "cookies.html"))) {
-  console.log("   ├── cookies.html");
+  console.log("   │   ├── cookies.html");
 }
 if (fs.existsSync(path.join(distDir, "agb.html"))) {
-  console.log("   └── agb.html");
+  console.log("   │   └── agb.html");
 }
-console.log("");
-console.log("Environment Variables:");
-console.log("   SUPABASE_URL");
-console.log("   SUPABASE_ANON_KEY");
+console.log("   │");
+console.log("   └── _redirects");
+
+console.log("\n🔑 Environment Variables:");
+console.log("   ✅ SUPABASE_URL");
+console.log("   ✅ SUPABASE_ANON_KEY");
 console.log(
   "   " +
-    (STRIPE_PUBLISHABLE_KEY ? "" : "") +
+    (STRIPE_PUBLISHABLE_KEY ? "✅" : "⚠️") +
     " STRIPE_PUBLISHABLE_KEY" +
     (STRIPE_PUBLISHABLE_KEY ? "" : " (Demo-Modus)")
 );
 console.log(
   "   " +
-    (STRIPE_PRICE_BASIC ? "" : "") +
+    (STRIPE_PRICE_BASIC ? "✅" : "⚠️") +
     " STRIPE_PRICE_BASIC" +
     (STRIPE_PRICE_BASIC ? "" : " (nicht gesetzt)")
 );
 console.log(
   "   " +
-    (STRIPE_PRICE_PREMIUM ? "" : "") +
+    (STRIPE_PRICE_PREMIUM ? "✅" : "⚠️") +
     " STRIPE_PRICE_PREMIUM" +
     (STRIPE_PRICE_PREMIUM ? "" : " (nicht gesetzt)")
 );
 console.log(
   "   " +
-    (STRIPE_PRICE_ELITE ? "" : "") +
+    (STRIPE_PRICE_ELITE ? "✅" : "⚠️") +
     " STRIPE_PRICE_ELITE" +
     (STRIPE_PRICE_ELITE ? "" : " (nicht gesetzt)")
 );
-console.log("");
-console.log("DSGVO-Compliance:");
+
+console.log("\n🛡️ DSGVO-Compliance:");
 console.log(
   "   " +
-    (copiedLegalFiles >= 4 ? "" : "") +
-    " Alle Rechtsdokumente vorhanden (" +
+    (copiedLegalFiles >= 4 ? "✅" : "⚠️") +
+    " Rechtsdokumente: " +
     copiedLegalFiles +
-    "/4)"
+    "/4"
 );
-console.log("   Cookie-Banner integriert");
-console.log("   Privacy-Checkbox in Registrierung");
-console.log("   Footer mit rechtlichen Links");
-console.log("");
-console.log("Nächste Schritte:");
+console.log("   ✅ Cookie-Banner integriert");
+console.log("   ✅ Privacy-Checkbox in Registrierung");
+console.log("   ✅ Footer mit rechtlichen Links");
+
+console.log("\n📝 Nächste Schritte:");
 console.log("   1. Überprüfe dist/ Ordner");
 console.log("   2. Teste lokal: npx serve dist");
 console.log("   3. Deploye auf Netlify");
 console.log("   4. ⚠️ WICHTIG: Passe Impressum & Datenschutz an!");
-console.log("");
-console.log("═════════════════════════════════════════════");
+console.log("\n═════════════════════════════════════════════\n");
