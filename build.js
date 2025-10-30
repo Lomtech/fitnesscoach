@@ -75,42 +75,56 @@ let appJs = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
 
 console.log("Ersetze Platzhalter mit Environment Variables...");
 
-// SUPABASE_URL - Verwende Regex für robuste Ersetzung
-appJs = appJs.replace(
-  /const SUPABASE_URL\s*=\s*"DEIN_SUPABASE_URL"[^\n]*/,
-  `const SUPABASE_URL = "${SUPABASE_URL}";`
-);
+// DEBUG: Zeige die ersten 1000 Zeichen von app.js
+console.log("\n🔍 DEBUG - Erste Zeilen von app.js:");
+const lines = appJs.split("\n").slice(0, 30);
+lines.forEach((line, i) => {
+  if (line.includes("SUPABASE_URL") || line.includes("SUPABASE_ANON_KEY")) {
+    console.log(`   Zeile ${i + 1}: ${line}`);
+  }
+});
+console.log("");
+
+// SUPABASE_URL - Ersetze ALLE Vorkommen (auch in if-Bedingungen)
+const beforeUrl = appJs.includes("DEIN_SUPABASE_URL");
+// Verwende globales Regex mit g-Flag für ALLE Vorkommen
+appJs = appJs.replace(/DEIN_SUPABASE_URL/g, SUPABASE_URL);
+const afterUrl =
+  appJs.includes(SUPABASE_URL) && !appJs.includes("DEIN_SUPABASE_URL");
 console.log(
   "   SUPABASE_URL:",
-  appJs.includes(SUPABASE_URL) ? "✅ ersetzt" : "❌ FEHLER"
+  beforeUrl ? "🔍 Platzhalter gefunden" : "❌ Platzhalter NICHT gefunden",
+  "→",
+  afterUrl ? "✅ ersetzt" : "❌ FEHLER"
 );
 
-// SUPABASE_ANON_KEY - Verwende Regex
-appJs = appJs.replace(
-  /const SUPABASE_ANON_KEY\s*=\s*"DEIN_SUPABASE_ANON_KEY"[^\n]*/,
-  `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`
-);
+// SUPABASE_ANON_KEY - Ersetze ALLE Vorkommen
+const beforeKey = appJs.includes("DEIN_SUPABASE_ANON_KEY");
+appJs = appJs.replace(/DEIN_SUPABASE_ANON_KEY/g, SUPABASE_ANON_KEY);
+const afterKey =
+  appJs.includes(SUPABASE_ANON_KEY) &&
+  !appJs.includes("DEIN_SUPABASE_ANON_KEY");
 console.log(
   "   SUPABASE_ANON_KEY:",
-  appJs.includes(SUPABASE_ANON_KEY) ? "✅ ersetzt" : "❌ FEHLER"
+  beforeKey ? "🔍 Platzhalter gefunden" : "❌ Platzhalter NICHT gefunden",
+  "→",
+  afterKey ? "✅ ersetzt" : "❌ FEHLER"
 );
 
-// STRIPE_PUBLISHABLE_KEY - Verwende Regex
+// STRIPE_PUBLISHABLE_KEY - Ersetze ALLE Vorkommen
 appJs = appJs.replace(
-  /const STRIPE_PUBLISHABLE_KEY\s*=\s*"DEIN_STRIPE_PUBLISHABLE_KEY"[^\n]*/,
-  `const STRIPE_PUBLISHABLE_KEY = "${
-    STRIPE_PUBLISHABLE_KEY || "DEIN_STRIPE_PUBLISHABLE_KEY"
-  }";`
+  /DEIN_STRIPE_PUBLISHABLE_KEY/g,
+  STRIPE_PUBLISHABLE_KEY || "DEIN_STRIPE_PUBLISHABLE_KEY"
 );
 console.log(
   "   STRIPE_PUBLISHABLE_KEY:",
   STRIPE_PUBLISHABLE_KEY ? "✅ ersetzt" : "⚠️ nicht gesetzt"
 );
 
-// Ersetze Price IDs
+// Ersetze Price IDs (flexibles Regex)
 if (STRIPE_PRICE_BASIC) {
   appJs = appJs.replace(
-    /basic:\s*"price_BASIC_ID"[^\n]*/,
+    /basic:\s*"price_[A-Z_]+"[^\n]*/,
     `basic: "${STRIPE_PRICE_BASIC}",`
   );
   console.log("   STRIPE_PRICE_BASIC: ✅ ersetzt");
@@ -120,7 +134,7 @@ if (STRIPE_PRICE_BASIC) {
 
 if (STRIPE_PRICE_PREMIUM) {
   appJs = appJs.replace(
-    /premium:\s*"price_PREMIUM_ID"[^\n]*/,
+    /premium:\s*"price_[A-Z_]+"[^\n]*/,
     `premium: "${STRIPE_PRICE_PREMIUM}",`
   );
   console.log("   STRIPE_PRICE_PREMIUM: ✅ ersetzt");
@@ -130,7 +144,7 @@ if (STRIPE_PRICE_PREMIUM) {
 
 if (STRIPE_PRICE_ELITE) {
   appJs = appJs.replace(
-    /elite:\s*"price_ELITE_ID"[^\n]*/,
+    /elite:\s*"price_[A-Z_]+"[^\n]*/,
     `elite: "${STRIPE_PRICE_ELITE}",`
   );
   console.log("   STRIPE_PRICE_ELITE: ✅ ersetzt");
@@ -138,21 +152,32 @@ if (STRIPE_PRICE_ELITE) {
   console.log("   STRIPE_PRICE_ELITE: ⚠️ nicht gesetzt");
 }
 
-// Verifiziere dass Ersetzungen funktioniert haben
-if (
+// Verifiziere dass ALLE Ersetzungen funktioniert haben
+const stillHasPlaceholders =
   appJs.includes("DEIN_SUPABASE_URL") ||
-  appJs.includes("DEIN_SUPABASE_ANON_KEY")
-) {
+  appJs.includes("DEIN_SUPABASE_ANON_KEY") ||
+  appJs.includes("DEIN_STRIPE_PUBLISHABLE_KEY");
+
+if (stillHasPlaceholders) {
   console.error("\n❌ KRITISCHER FEHLER");
-  console.error("Platzhalter wurden NICHT ersetzt!");
-  console.error("App.js enthält noch:");
-  if (appJs.includes("DEIN_SUPABASE_URL"))
-    console.error("  - DEIN_SUPABASE_URL");
-  if (appJs.includes("DEIN_SUPABASE_ANON_KEY"))
-    console.error("  - DEIN_SUPABASE_ANON_KEY");
+  console.error("Platzhalter wurden NICHT vollständig ersetzt!");
+  console.error("\n🔍 Verbleibende Platzhalter in folgenden Zeilen:");
+  const lines = appJs.split("\n");
+  lines.forEach((line, i) => {
+    if (
+      line.includes("DEIN_SUPABASE_URL") ||
+      line.includes("DEIN_SUPABASE_ANON_KEY") ||
+      line.includes("DEIN_STRIPE_PUBLISHABLE_KEY")
+    ) {
+      console.error(`   Zeile ${i + 1}: ${line.trim()}`);
+    }
+  });
+
   console.error("\n⚠️ Build wird abgebrochen!");
   process.exit(1);
 }
+
+console.log("✅ Alle Platzhalter erfolgreich ersetzt!");
 
 // Schreibe app.js in dist
 fs.writeFileSync(path.join(distDir, "app.js"), appJs);
