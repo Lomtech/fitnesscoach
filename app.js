@@ -222,7 +222,7 @@ const demoContent = {
       description: "Hochintensives Intervalltraining",
       url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/videos/basic/WhatsApp%20Video%202025-10-30%20at%2002.38.17.mp4",
       thumbnail:
-        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.jpeg",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       requiredPlan: "premium",
     },
     {
@@ -231,7 +231,7 @@ const demoContent = {
       description: "Flexibilität und Entspannung",
       url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/videos/basic/WhatsApp%20Video%202025-10-30%20at%2002.38.17.mp4",
       thumbnail:
-        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.jpeg",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       requiredPlan: "premium",
     },
     {
@@ -251,7 +251,7 @@ const demoContent = {
       description: "Strukturierter Aufbauplan",
       url: "https://example.com/doc1.pdf",
       thumbnail:
-        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.jpeg",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       requiredPlan: "basic",
     },
     {
