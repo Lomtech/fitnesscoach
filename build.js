@@ -104,13 +104,38 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
 }
 
 // ============================================
-// 5. HAUPTDATEIEN KOPIEREN
+// 5. HAUPTDATEIEN KOPIEREN MIT CACHE-BUSTING
 // ============================================
 console.log("\n📁 Kopiere Hauptdateien...");
 
-const mainFiles = ["index.html", "styles.css", "viewer.html"];
+// Erstelle Build-Timestamp für Cache-Busting
+const buildVersion = Date.now();
+console.log(`   🔖 Build-Version: ${buildVersion}`);
 
-mainFiles.forEach((file) => {
+// Kopiere und modifiziere index.html für Cache-Busting
+if (fs.existsSync(path.join(__dirname, "index.html"))) {
+  let indexHtml = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+
+  // Füge Version zu app.js hinzu
+  indexHtml = indexHtml.replace(
+    /<script src="app\.js"><\/script>/g,
+    `<script src="app.js?v=${buildVersion}"></script>`
+  );
+
+  // Füge Version zu styles.css hinzu
+  indexHtml = indexHtml.replace(
+    /<link rel="stylesheet" href="styles\.css">/g,
+    `<link rel="stylesheet" href="styles.css?v=${buildVersion}">`
+  );
+
+  fs.writeFileSync(path.join(distDir, "index.html"), indexHtml);
+  console.log("   ✅ index.html (mit Cache-Busting)");
+}
+
+// Kopiere andere Dateien normal
+const otherFiles = ["styles.css", "viewer.html"];
+
+otherFiles.forEach((file) => {
   if (fs.existsSync(path.join(__dirname, file))) {
     fs.copyFileSync(path.join(__dirname, file), path.join(distDir, file));
     console.log(`   ✅ ${file}`);

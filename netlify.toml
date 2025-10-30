@@ -116,11 +116,12 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# JavaScript - 1 Jahr cachen (mit immutable flag)
+# JavaScript - NUR 1 Stunde cachen (nicht 1 Jahr!)
+# WICHTIG: app.js enthält oft geänderte Inhalte (Image-URLs, Demo-Content)
 [[headers]]
   for = "*.js"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=3600, must-revalidate"
 
 # HTML - Nicht cachen (immer aktuell laden)
 [[headers]]
