@@ -21,7 +21,7 @@
 // >>> GLIEDERUNGSPUNKT 1: KONFIGURATION
 // ============================================
 // WICHTIG: Ersetze diese Werte mit deinen eigenen Supabase-Credentials
-const SUPABASE_URL = "DEINE_SUPABASE_URL"; // z.B. 'https://xxxxx.supabase.co'
+const SUPABASE_URL = "DEINE_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY";
 
 // ============================================

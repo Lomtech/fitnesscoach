@@ -2,7 +2,7 @@
 // BUILD-SCRIPT GLIEDERUNG (Übersicht für schnelle Navigation)
 // ============================================
 // Suche im Code nach: "// >>> GLIEDERUNGSPUNKT X: BEZEICHNUNG"
-// 
+//
 // 1. INITIALISIERUNG & SETUP (Module, dist-Ordner, Environment Variables)
 // 2. VALIDIERUNG DER ENV-VARIABLEN (Supabase Pflicht, Stripe optional)
 // 3. APP.JS VERARBEITEN (Platzhalter ersetzen: Supabase & Stripe)
@@ -172,13 +172,16 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
   );
 
   // Ersetze die kompletten Zeilen
-  successHtml = successHtml.replace(
-    `const SUPABASE_URL = 'DEINE_SUPABASE_URL';`,
-    `const SUPABASE_URL = '${SUPABASE_URL}';`
+  // SUPABASE_URL
+  appJs = appJs.replace(
+    /const SUPABASE_URL\s*=\s*['"].*?['"];/,
+    `const SUPABASE_URL = "${SUPABASE_URL}";`
   );
-  successHtml = successHtml.replace(
-    `const SUPABASE_ANON_KEY = 'DEIN_SUPABASE_ANON_KEY';`,
-    `const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';`
+
+  // SUPABASE_ANON_KEY
+  appJs = appJs.replace(
+    /const SUPABASE_ANON_KEY\s*=\s*['"].*?['"];/,
+    `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`
   );
 
   fs.writeFileSync(path.join(distDir, "success.html"), successHtml);
@@ -194,11 +197,7 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
 console.log("");
 console.log("Kopiere Hauptdateien...");
 
-const mainFiles = [
-  "index.html",
-  "styles.css", 
-  "viewer.html"
-];
+const mainFiles = ["index.html", "styles.css", "viewer.html"];
 
 mainFiles.forEach((file) => {
   if (fs.existsSync(path.join(__dirname, file))) {
@@ -220,7 +219,7 @@ const legalFiles = [
   "impressum.html",
   "datenschutz.html",
   "cookies.html",
-  "agb.html"
+  "agb.html",
 ];
 
 let copiedLegalFiles = 0;
