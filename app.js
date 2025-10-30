@@ -794,10 +794,6 @@ async function handlePayment(e) {
       cancelUrl: `${window.location.origin}/?cancelled=true`,
       customerEmail: currentUser.email,
       clientReferenceId: currentUser.id,
-      metadata: {
-        user_id: currentUser.id,
-        plan: plan,
-      },
     });
 
     if (stripeError) {
