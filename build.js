@@ -177,13 +177,14 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
     /const SUPABASE_URL\s*=\s*['"].*?['"];/,
     `const SUPABASE_URL = "${SUPABASE_URL}";`
   );
-  //Test
 
   // SUPABASE_ANON_KEY
   appJs = appJs.replace(
     /const SUPABASE_ANON_KEY\s*=\s*['"].*?['"];/,
     `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`
   );
+
+  //test
 
   fs.writeFileSync(path.join(distDir, "success.html"), successHtml);
   console.log("success.html erstellt");
