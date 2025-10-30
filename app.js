@@ -20,18 +20,12 @@
 // 1. KONFIGURATION (Supabase & Stripe)
 // >>> GLIEDERUNGSPUNKT 1: KONFIGURATION
 // ============================================
-// WICHTIG: Diese Werte werden beim Build-Prozess automatisch ersetzt
+// Diese Werte werden beim Build automatisch durch build.js ersetzt
 const SUPABASE_URL = "DEIN_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY";
-
-// ============================================
-// STRIPE KONFIGURATION
-// ============================================
-// WICHTIG: Diese Werte werden beim Build-Prozess automatisch ersetzt
 const STRIPE_PUBLISHABLE_KEY = "DEIN_STRIPE_PUBLISHABLE_KEY";
 
 // Stripe Preise (Price IDs aus Stripe Dashboard)
-// Werden beim Build-Prozess automatisch ersetzt
 const STRIPE_PRICES = {
   basic: "price_BASIC_ID",
   premium: "price_PREMIUM_ID",
@@ -41,7 +35,7 @@ const STRIPE_PRICES = {
 // Initialisiere Stripe (wird nach DOM geladen)
 let stripe = null;
 
-// Debug-Modus aktivieren
+// Debug-Modus
 const DEBUG = true;
 
 function debugLog(...args) {
@@ -50,12 +44,10 @@ function debugLog(...args) {
   }
 }
 
-// ✅ Konfiguration wird beim Build-Prozess automatisch gesetzt (siehe build.js)
-// Keine manuelle Konfiguration erforderlich!
-
+// Initialisiere Supabase Client
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-debugLog("Supabase initialisiert:", {
+debugLog("✅ Supabase initialisiert:", {
   url: SUPABASE_URL,
   keyPrefix: SUPABASE_ANON_KEY.substring(0, 20) + "...",
 });
@@ -76,31 +68,21 @@ let userSubscription = null;
  * Cookie-Consent Verwaltung
  */
 const CookieConsent = {
-  // Cookie-Namen
   CONSENT_COOKIE: "fitticoach_cookie_consent",
   CONSENT_EXPIRY_DAYS: 365,
 
-  /**
-   * Prüft ob Cookie-Zustimmung vorhanden ist
-   */
   hasConsent() {
     return localStorage.getItem(this.CONSENT_COOKIE) !== null;
   },
 
-  /**
-   * Gibt die Zustimmung zurück
-   */
   getConsent() {
     const consent = localStorage.getItem(this.CONSENT_COOKIE);
     return consent ? JSON.parse(consent) : null;
   },
 
-  /**
-   * Speichert die Zustimmung
-   */
   setConsent(analytics = false, marketing = false) {
     const consent = {
-      essential: true, // Immer true
+      essential: true,
       analytics: analytics,
       marketing: marketing,
       timestamp: new Date().toISOString(),
@@ -109,23 +91,16 @@ const CookieConsent = {
     debugLog("✅ Cookie-Zustimmung gespeichert:", consent);
   },
 
-  /**
-   * Zeigt Cookie-Banner an
-   */
   showBanner() {
     const banner = document.getElementById("cookieConsent");
     if (banner) {
       banner.style.display = "block";
-      // Animation
       setTimeout(() => {
         banner.classList.add("show");
       }, 100);
     }
   },
 
-  /**
-   * Versteckt Cookie-Banner
-   */
   hideBanner() {
     const banner = document.getElementById("cookieConsent");
     if (banner) {
@@ -136,55 +111,36 @@ const CookieConsent = {
     }
   },
 
-  /**
-   * Prüft ob Analytics erlaubt ist
-   */
   canUseAnalytics() {
     const consent = this.getConsent();
     return consent && consent.analytics;
   },
 
-  /**
-   * Prüft ob Marketing erlaubt ist
-   */
   canUseMarketing() {
     const consent = this.getConsent();
     return consent && consent.marketing;
   },
 
-  /**
-   * Initialisiert Cookie-Consent
-   */
   init() {
     if (!this.hasConsent()) {
       this.showBanner();
     } else {
       debugLog("ℹ️ Cookie-Zustimmung bereits vorhanden");
-      // Optionale Analytics laden wenn erlaubt
       if (this.canUseAnalytics()) {
         this.loadAnalytics();
       }
     }
   },
 
-  /**
-   * Lädt Analytics (nur wenn Zustimmung vorhanden)
-   */
   loadAnalytics() {
     debugLog("📊 Analytics wird geladen (Zustimmung vorhanden)");
     // Hier Google Analytics, Matomo etc. laden
-    // Beispiel:
-    // window.dataLayer = window.dataLayer || [];
-    // function gtag(){dataLayer.push(arguments);}
-    // gtag('js', new Date());
-    // gtag('config', 'GA_MEASUREMENT_ID');
   },
 };
 
 // ============================================
 // 4. DEMO-INHALTE & PLAN-HIERARCHIE
 // >>> GLIEDERUNGSPUNKT 4: DEMO-INHALTE & PLAN-HIERARCHIE
-// ⚠️ THUMBNAIL: ChatGPT Image (PNG) - AI-generiertes Bild
 // ============================================
 const demoContent = {
   videos: [
@@ -303,7 +259,6 @@ const demoContent = {
   ],
 };
 
-// Plan-Hierarchie
 const planHierarchy = {
   basic: 1,
   premium: 2,
@@ -315,28 +270,16 @@ const planHierarchy = {
 // >>> GLIEDERUNGSPUNKT 5: INITIALISIERUNG
 // ============================================
 document.addEventListener("DOMContentLoaded", async () => {
-  // Cookie-Consent initialisieren
   CookieConsent.init();
 
-  // Debug: Zeige Stripe Key
   debugLog("🔑 STRIPE_PUBLISHABLE_KEY:", STRIPE_PUBLISHABLE_KEY);
-  debugLog(
-    "🔑 Ist Platzhalter?",
-    STRIPE_PUBLISHABLE_KEY === "DEIN_STRIPE_PUBLISHABLE_KEY"
-  );
 
-  // Prüfe ob Stripe.js geladen wurde
-  debugLog("🔍 Stripe Objekt verfügbar?", typeof Stripe !== "undefined");
-
-  // Initialisiere Stripe nur wenn Cookie-Zustimmung vorhanden
   if (CookieConsent.hasConsent()) {
     if (STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY") {
       debugLog("✅ Stripe Key ist gesetzt, versuche zu initialisieren...");
 
       if (typeof Stripe === "undefined") {
-        console.error(
-          "❌ Stripe.js Bibliothek nicht geladen! Prüfe index.html <script> Tag"
-        );
+        console.error("❌ Stripe.js Bibliothek nicht geladen!");
         showAlert(
           "Stripe.js konnte nicht geladen werden. Bitte Seite neu laden.",
           "error"
@@ -344,11 +287,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else {
         try {
           stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-          debugLog("✅ Stripe erfolgreich initialisiert:", stripe);
+          debugLog("✅ Stripe erfolgreich initialisiert");
           console.log("✅ Stripe ist bereit für Zahlungen!");
         } catch (error) {
           console.error("❌ Stripe Initialisierungsfehler:", error);
-          console.error("❌ Key:", STRIPE_PUBLISHABLE_KEY);
           showAlert(
             "Stripe konnte nicht geladen werden. Zahlungen sind deaktiviert.",
             "error"
@@ -359,7 +301,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.warn(
         "⚠️ Stripe Publishable Key nicht konfiguriert - Demo-Modus aktiv"
       );
-      console.warn("⚠️ Aktueller Wert:", STRIPE_PUBLISHABLE_KEY);
     }
   } else {
     console.log("ℹ️ Stripe-Initialisierung wartet auf Cookie-Zustimmung");
@@ -405,7 +346,6 @@ async function loadUserSubscription() {
 // >>> GLIEDERUNGSPUNKT 7: EVENT LISTENERS
 // ============================================
 function initializeEventListeners() {
-  // Navigation
   const loginBtn = document.getElementById("loginBtn");
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
@@ -425,7 +365,6 @@ function initializeEventListeners() {
     });
   }
 
-  // Modal Controls
   document.querySelectorAll(".close").forEach((closeBtn) => {
     closeBtn.addEventListener("click", function () {
       this.closest(".modal").style.display = "none";
@@ -438,7 +377,6 @@ function initializeEventListeners() {
     }
   });
 
-  // Auth Forms
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", handleLogin);
@@ -454,7 +392,6 @@ function initializeEventListeners() {
     paymentForm.addEventListener("submit", handlePayment);
   }
 
-  // Switch between Login/Register
   const showRegisterLink = document.getElementById("showRegister");
   if (showRegisterLink) {
     showRegisterLink.addEventListener("click", (e) => {
@@ -473,12 +410,10 @@ function initializeEventListeners() {
     });
   }
 
-  // Subscribe buttons
   document.querySelectorAll(".subscribe-btn").forEach((btn) => {
     btn.addEventListener("click", handleSubscriptionClick);
   });
 
-  // Content Tabs
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const tabName = btn.getAttribute("data-tab");
@@ -486,7 +421,6 @@ function initializeEventListeners() {
     });
   });
 
-  // Cookie Consent Buttons
   const acceptAllBtn = document.getElementById("acceptAll");
   if (acceptAllBtn) {
     acceptAllBtn.addEventListener("click", () => {
@@ -494,7 +428,6 @@ function initializeEventListeners() {
       CookieConsent.hideBanner();
       showAlert("✅ Alle Cookies akzeptiert", "success");
 
-      // Stripe initialisieren wenn noch nicht geschehen
       if (
         !stripe &&
         STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY" &&
@@ -504,7 +437,6 @@ function initializeEventListeners() {
         debugLog("✅ Stripe nach Cookie-Zustimmung initialisiert");
       }
 
-      // Analytics laden
       CookieConsent.loadAnalytics();
     });
   }
@@ -516,7 +448,6 @@ function initializeEventListeners() {
       CookieConsent.hideBanner();
       showAlert("✅ Nur notwendige Cookies akzeptiert", "success");
 
-      // Stripe initialisieren (essential für Zahlung)
       if (
         !stripe &&
         STRIPE_PUBLISHABLE_KEY !== "DEIN_STRIPE_PUBLISHABLE_KEY" &&
@@ -528,7 +459,6 @@ function initializeEventListeners() {
     });
   }
 
-  // Cookie-Einstellungen im Footer
   const openCookieSettings = document.getElementById("openCookieSettings");
   if (openCookieSettings) {
     openCookieSettings.addEventListener("click", (e) => {
@@ -586,7 +516,6 @@ async function handleRegister(e) {
     acceptPrivacy,
   });
 
-  // Validierung
   if (!acceptPrivacy) {
     showAlert("Bitte akzeptiere die Datenschutzerklärung und AGB", "error");
     return;
@@ -617,11 +546,6 @@ async function handleRegister(e) {
 
     if (error) {
       console.error("❌ Registration error:", error);
-      console.error("Error details:", {
-        message: error.message,
-        status: error.status,
-        name: error.name,
-      });
 
       if (error.message.includes("User already registered")) {
         showAlert(
@@ -632,15 +556,6 @@ async function handleRegister(e) {
         showAlert(
           "❌ Datenbankfehler! Bitte öffne die Browser-Konsole (F12) für Details.",
           "error"
-        );
-        console.error(
-          "💡 LÖSUNG: Gehe zu Supabase → Authentication → Providers → Email"
-        );
-        console.error(
-          '💡 Deaktiviere "Confirm email" und "Secure email change"'
-        );
-        console.error(
-          "💡 Stelle sicher, dass die subscriptions-Tabelle existiert"
         );
       } else if (error.message.includes("Unable to validate email")) {
         showAlert(
@@ -731,11 +646,11 @@ function showPaymentModal(plan) {
   };
 
   document.getElementById("paymentInfo").innerHTML = `
-        <div class="alert alert-success">
-            <strong>${planNames[plan]}-Plan</strong><br>
-            €${prices[plan]} / Monat
-        </div>
-    `;
+    <div class="alert alert-success">
+      <strong>${planNames[plan]}-Plan</strong><br>
+      €${prices[plan]} / Monat
+    </div>
+  `;
 
   document.getElementById("paymentForm").setAttribute("data-plan", plan);
   showModal("paymentModal");
@@ -746,7 +661,6 @@ async function handlePayment(e) {
 
   const plan = e.target.getAttribute("data-plan");
 
-  // Prüfe Cookie-Zustimmung
   if (!CookieConsent.hasConsent()) {
     showAlert(
       "Bitte akzeptiere die Cookie-Einstellungen, um fortzufahren.",
@@ -784,10 +698,6 @@ async function handlePayment(e) {
       cancelUrl: `${window.location.origin}/?cancelled=true`,
       customerEmail: currentUser.email,
       clientReferenceId: currentUser.id,
-      //metadata: {
-      //user_id: currentUser.id,
-      //plan: plan,
-      // },
     });
 
     if (stripeError) {
@@ -906,14 +816,14 @@ function displayUserInfo() {
   const userInfoElement = document.getElementById("userInfo");
   if (userInfoElement) {
     userInfoElement.innerHTML = `
-        <h3>Willkommen, ${userName}! 👋</h3>
-        <p><strong>Aktueller Plan:</strong> ${
-          planNames[userSubscription.plan]
-        }</p>
-        <p><strong>Status:</strong> <span style="color: var(--success);">Aktiv</span></p>
-        <p><strong>Gültig bis:</strong> ${new Date(
-          userSubscription.end_date
-        ).toLocaleDateString("de-DE")}</p>
+      <h3>Willkommen, ${userName}! 👋</h3>
+      <p><strong>Aktueller Plan:</strong> ${
+        planNames[userSubscription.plan]
+      }</p>
+      <p><strong>Status:</strong> <span style="color: var(--success);">Aktiv</span></p>
+      <p><strong>Gültig bis:</strong> ${new Date(
+        userSubscription.end_date
+      ).toLocaleDateString("de-DE")}</p>
     `;
   }
 }
@@ -982,16 +892,9 @@ function createContentItem(content, type, hasAccess) {
     elite: '<span class="access-badge elite">Elite</span>',
   };
 
-  let mediaElement = "";
-  if (type === "video" && hasAccess) {
-    mediaElement = `<img src="${content.thumbnail}" alt="${content.title}" ${
-      !hasAccess ? 'class="locked"' : ""
-    }>`;
-  } else {
-    mediaElement = `<img src="${content.thumbnail}" alt="${content.title}" ${
-      !hasAccess ? 'class="locked"' : ""
-    }>`;
-  }
+  let mediaElement = `<img src="${content.thumbnail}" alt="${content.title}" ${
+    !hasAccess ? 'class="locked"' : ""
+  }>`;
 
   let viewerUrl = "";
   if (hasAccess) {
@@ -1005,18 +908,18 @@ function createContentItem(content, type, hasAccess) {
   }
 
   div.innerHTML = `
-        ${mediaElement}
-        <div class="content-info">
-            <h4>${content.title} ${!hasAccess ? "🔒" : ""}</h4>
-            <p>${content.description}</p>
-            ${planBadges[content.requiredPlan]}
-            ${
-              hasAccess
-                ? `<br><a href="${viewerUrl}" class="btn-primary" style="display: inline-block; margin-top: 10px; padding: 0.5rem 1rem; text-decoration: none;">Ansehen</a>`
-                : '<p style="color: var(--danger); margin-top: 10px;">Upgrade erforderlich</p>'
-            }
-        </div>
-    `;
+    ${mediaElement}
+    <div class="content-info">
+      <h4>${content.title} ${!hasAccess ? "🔒" : ""}</h4>
+      <p>${content.description}</p>
+      ${planBadges[content.requiredPlan]}
+      ${
+        hasAccess
+          ? `<br><a href="${viewerUrl}" class="btn-primary" style="display: inline-block; margin-top: 10px; padding: 0.5rem 1rem; text-decoration: none;">Ansehen</a>`
+          : '<p style="color: var(--danger); margin-top: 10px;">Upgrade erforderlich</p>'
+      }
+    </div>
+  `;
 
   return div;
 }
