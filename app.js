@@ -148,7 +148,7 @@ const demoContent = {
       id: 1,
       title: "Übungskatalog Basics",
       description: "Alle grundlegenden Übungen",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://via.placeholder.com/600x400/ff6b35/ffffff?text=%C3%9Cbungen+Basics",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=%C3%9Cbungen",
       requiredPlan: "basic",
@@ -157,7 +157,7 @@ const demoContent = {
       id: 2,
       title: "Anatomy Guide",
       description: "Muskelgruppen verstehen",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://via.placeholder.com/600x400/004e89/ffffff?text=Anatomy",
       thumbnail:
         "https://via.placeholder.com/400x200/004e89/ffffff?text=Anatomy",
       requiredPlan: "premium",
@@ -632,10 +632,21 @@ function updateUIForLoggedInUser() {
   document.getElementById("logoutBtn").style.display = "block";
 
   if (userSubscription) {
+    // Verstecke Preissektion wenn User ein Abo hat
+    const pricingSection = document.getElementById("pricing");
+    if (pricingSection) {
+      pricingSection.style.display = "none";
+    }
+
     document.getElementById("membersArea").style.display = "block";
     displayUserInfo();
     loadContent();
   } else {
+    // Kein Abo - Zeige Preise
+    const pricingSection = document.getElementById("pricing");
+    if (pricingSection) {
+      pricingSection.style.display = "block";
+    }
     document.getElementById("membersArea").style.display = "none";
   }
 }
@@ -644,6 +655,12 @@ function updateUIForLoggedOutUser() {
   document.getElementById("loginBtn").style.display = "block";
   document.getElementById("logoutBtn").style.display = "none";
   document.getElementById("membersArea").style.display = "none";
+
+  // Zeige Preissektion für nicht angemeldete User
+  const pricingSection = document.getElementById("pricing");
+  if (pricingSection) {
+    pricingSection.style.display = "block";
+  }
 }
 
 function displayUserInfo() {

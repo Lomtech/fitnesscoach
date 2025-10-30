@@ -2,23 +2,40 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fitness Coach Premium</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta
+      name="description"
+      content="Premium Fitness Training mit exklusiven Inhalten"
+    />
+    <title>FittiCoach - Premium Fitness Training</title>
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav>
       <div class="container">
-        <div class="nav-brand">
-          <h1>💪 Fitness Coach Premium</h1>
-        </div>
-        <div class="nav-menu">
-          <a href="#home" class="nav-link">Home</a>
-          <a href="#about" class="nav-link">Über mich</a>
-          <a href="#pricing" class="nav-link">Preise</a>
-          <button id="loginBtn" class="btn-primary">Anmelden</button>
-          <button id="logoutBtn" class="btn-secondary" style="display: none">
+        <a href="/" class="logo">🏋️ FittiCoach</a>
+        <div class="nav-buttons">
+          <button id="loginBtn" class="btn btn-primary">Anmelden</button>
+          <button
+            id="logoutBtn"
+            class="btn btn-secondary"
+            style="display: none"
+          >
             Abmelden
           </button>
         </div>
@@ -26,71 +43,77 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section class="hero">
       <div class="container">
-        <h2>Erreiche deine Fitnessziele mit professioneller Unterstützung</h2>
+        <h1>Werde die beste Version von dir</h1>
         <p>
-          Exklusive Trainingsprogramme, Ernährungspläne und persönliche
-          Betreuung
+          Professionelle Trainingspläne, Ernährungsguides und exklusive Videos
+          von zertifizierten Coaches
         </p>
-        <button id="ctaBtn" class="btn-large">Jetzt starten</button>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-      <div class="container">
-        <h2>Über mich</h2>
-        <p>
-          Mit über 10 Jahren Erfahrung helfe ich dir, deine Fitnessziele zu
-          erreichen. Egal ob Muskelaufbau, Gewichtsverlust oder allgemeine
-          Fitness - ich begleite dich auf deinem Weg.
-        </p>
+        <button
+          id="ctaBtn"
+          class="btn btn-primary"
+          style="font-size: 1.1rem; padding: 1rem 2rem"
+        >
+          Jetzt starten
+        </button>
       </div>
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
+    <section id="pricing">
       <div class="container">
-        <h2>Mitgliedschaftspläne</h2>
+        <h2 class="text-center">Wähle deinen Plan</h2>
+        <p class="text-center" style="color: #999; margin-bottom: 3rem">
+          Alle Pläne mit 30 Tage Geld-zurück-Garantie
+        </p>
+
         <div class="pricing-cards">
+          <!-- Basic Plan -->
           <div class="pricing-card">
             <h3>Basis</h3>
             <div class="price">€29<span>/Monat</span></div>
-            <ul>
-              <li>✓ Zugang zu Basis-Videos</li>
-              <li>✓ Trainingspläne</li>
-              <li>✓ Community-Zugang</li>
+            <ul class="features">
+              <li>Grundlegende Trainingspläne</li>
+              <li>Basis Übungsvideos</li>
+              <li>Community-Zugang</li>
+              <li>E-Mail Support</li>
             </ul>
-            <button class="btn-primary subscribe-btn" data-plan="basic">
-              Auswählen
+            <button class="subscribe-btn" data-plan="basic">
+              Basis wählen
             </button>
           </div>
+
+          <!-- Premium Plan -->
           <div class="pricing-card featured">
-            <div class="badge">Beliebt</div>
             <h3>Premium</h3>
             <div class="price">€59<span>/Monat</span></div>
-            <ul>
-              <li>✓ Alle Basis-Features</li>
-              <li>✓ Premium-Videos & Guides</li>
-              <li>✓ Ernährungspläne</li>
-              <li>✓ Monatliches Coaching-Gespräch</li>
+            <ul class="features">
+              <li>Alle Basis-Features</li>
+              <li>Erweiterte Trainingspläne</li>
+              <li>Premium Videos & Tutorials</li>
+              <li>Ernährungsguides</li>
+              <li>Vorrang-Support</li>
             </ul>
-            <button class="btn-primary subscribe-btn" data-plan="premium">
-              Auswählen
+            <button class="subscribe-btn" data-plan="premium">
+              Premium wählen
             </button>
           </div>
+
+          <!-- Elite Plan -->
           <div class="pricing-card">
             <h3>Elite</h3>
             <div class="price">€99<span>/Monat</span></div>
-            <ul>
-              <li>✓ Alle Premium-Features</li>
-              <li>✓ Persönliche Trainingspläne</li>
-              <li>✓ Wöchentliches 1:1 Coaching</li>
-              <li>✓ 24/7 Chat-Support</li>
+            <ul class="features">
+              <li>Alle Premium-Features</li>
+              <li>Persönliche Trainingspläne</li>
+              <li>1:1 Video-Coaching</li>
+              <li>Individuelle Ernährungspläne</li>
+              <li>24/7 Premium Support</li>
+              <li>Exklusive Community</li>
             </ul>
-            <button class="btn-primary subscribe-btn" data-plan="elite">
-              Auswählen
+            <button class="subscribe-btn" data-plan="elite">
+              Elite wählen
             </button>
           </div>
         </div>
@@ -98,29 +121,38 @@
     </section>
 
     <!-- Members Area -->
-    <section id="membersArea" class="members-area" style="display: none">
+    <section id="membersArea" style="display: none">
       <div class="container">
-        <h2>Mitgliederbereich</h2>
-        <div id="userInfo" class="user-info"></div>
-
-        <div class="content-tabs">
-          <button class="tab-btn active" data-tab="videos">Videos</button>
-          <button class="tab-btn" data-tab="documents">Dokumente</button>
-          <button class="tab-btn" data-tab="images">Bilder</button>
+        <!-- User Info -->
+        <div class="user-info" id="userInfo">
+          <!-- Wird von JavaScript gefüllt -->
         </div>
 
-        <div id="contentArea" class="content-area">
-          <div id="videos" class="tab-content active">
-            <h3>Trainingsvideos</h3>
-            <div id="videoList" class="content-grid"></div>
+        <!-- Content Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="videos">📹 Videos</button>
+          <button class="tab-btn" data-tab="documents">📄 Dokumente</button>
+          <button class="tab-btn" data-tab="images">🖼️ Bilder</button>
+        </div>
+
+        <!-- Videos Tab -->
+        <div id="videos" class="tab-content active">
+          <div class="content-grid" id="videoList">
+            <!-- Wird von JavaScript gefüllt -->
           </div>
-          <div id="documents" class="tab-content">
-            <h3>Trainingspläne & Guides</h3>
-            <div id="documentList" class="content-grid"></div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents" class="tab-content">
+          <div class="content-grid" id="documentList">
+            <!-- Wird von JavaScript gefüllt -->
           </div>
-          <div id="images" class="tab-content">
-            <h3>Übungsanleitungen</h3>
-            <div id="imageList" class="content-grid"></div>
+        </div>
+
+        <!-- Images Tab -->
+        <div id="images" class="tab-content">
+          <div class="content-grid" id="imageList">
+            <!-- Wird von JavaScript gefüllt -->
           </div>
         </div>
       </div>
@@ -132,16 +164,22 @@
         <span class="close">&times;</span>
         <h2>Anmelden</h2>
         <form id="loginForm">
-          <input type="email" id="loginEmail" placeholder="E-Mail" required />
-          <input
-            type="password"
-            id="loginPassword"
-            placeholder="Passwort"
-            required
-          />
-          <button type="submit" class="btn-primary">Anmelden</button>
+          <div class="form-group">
+            <label>E-Mail</label>
+            <input type="email" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label>Passwort</label>
+            <input type="password" id="loginPassword" required />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Anmelden
+          </button>
+          <div class="form-link">
+            Noch kein Konto?
+            <a href="#" id="showRegister">Jetzt registrieren</a>
+          </div>
         </form>
-        <p>Noch kein Konto? <a href="#" id="showRegister">Registrieren</a></p>
       </div>
     </div>
 
@@ -151,22 +189,30 @@
         <span class="close">&times;</span>
         <h2>Registrieren</h2>
         <form id="registerForm">
-          <input type="text" id="registerName" placeholder="Name" required />
-          <input
-            type="email"
-            id="registerEmail"
-            placeholder="E-Mail"
-            required
-          />
-          <input
-            type="password"
-            id="registerPassword"
-            placeholder="Passwort (min. 6 Zeichen)"
-            required
-          />
-          <button type="submit" class="btn-primary">Registrieren</button>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="registerName" required />
+          </div>
+          <div class="form-group">
+            <label>E-Mail</label>
+            <input type="email" id="registerEmail" required />
+          </div>
+          <div class="form-group">
+            <label>Passwort (min. 6 Zeichen)</label>
+            <input
+              type="password"
+              id="registerPassword"
+              required
+              minlength="6"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Registrieren
+          </button>
+          <div class="form-link">
+            Bereits registriert? <a href="#" id="showLogin">Jetzt anmelden</a>
+          </div>
         </form>
-        <p>Bereits registriert? <a href="#" id="showLogin">Anmelden</a></p>
       </div>
     </div>
 
@@ -175,35 +221,22 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Zahlung</h2>
-        <div id="paymentInfo"></div>
+        <div id="paymentInfo">
+          <!-- Wird von JavaScript gefüllt -->
+        </div>
         <form id="paymentForm">
-          <input
-            type="text"
-            id="cardNumber"
-            placeholder="Kartennummer"
-            required
-          />
-          <div class="card-details">
-            <input type="text" id="cardExpiry" placeholder="MM/YY" required />
-            <input type="text" id="cardCVC" placeholder="CVC" required />
-          </div>
-          <button type="submit" class="btn-primary">Zahlung abschließen</button>
+          <p style="color: #999; text-align: center; margin: 2rem 0">
+            Du wirst zu Stripe weitergeleitet, um die Zahlung sicher
+            abzuschließen.
+          </p>
+          <button type="submit" class="btn btn-primary" style="width: 100%">
+            Zur Zahlung
+          </button>
         </form>
-        <p class="payment-note">
-          Dies ist eine Demo. In Produktion würde hier Stripe/PayPal integriert.
-        </p>
       </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-      <div class="container">
-        <p>&copy; 2024 Fitness Coach Premium. Alle Rechte vorbehalten.</p>
-      </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://js.stripe.com/v3/"></script>
+    <!-- App Script -->
     <script src="app.js"></script>
   </body>
 </html>
