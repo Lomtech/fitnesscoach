@@ -173,18 +173,16 @@ if (fs.existsSync(path.join(__dirname, "success.html"))) {
 
   // Ersetze die kompletten Zeilen
   // SUPABASE_URL
-  appJs = appJs.replace(
+  successHtml = successHtml.replace(
     /const SUPABASE_URL\s*=\s*['"].*?['"];/,
     `const SUPABASE_URL = "${SUPABASE_URL}";`
   );
 
   // SUPABASE_ANON_KEY
-  appJs = appJs.replace(
+  successHtml = successHtml.replace(
     /const SUPABASE_ANON_KEY\s*=\s*['"].*?['"];/,
     `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`
   );
-
-  //test
 
   fs.writeFileSync(path.join(distDir, "success.html"), successHtml);
   console.log("success.html erstellt");
