@@ -148,7 +148,7 @@ const demoContent = {
       id: 1,
       title: "Übungskatalog Basics",
       description: "Alle grundlegenden Übungen",
-      url: "https://via.placeholder.com/600x400/ff6b35/ffffff?text=%C3%9Cbungen+Basics",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=%C3%9Cbungen",
       requiredPlan: "basic",
@@ -157,7 +157,7 @@ const demoContent = {
       id: 2,
       title: "Anatomy Guide",
       description: "Muskelgruppen verstehen",
-      url: "https://via.placeholder.com/600x400/004e89/ffffff?text=Anatomy",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
         "https://via.placeholder.com/400x200/004e89/ffffff?text=Anatomy",
       requiredPlan: "premium",
