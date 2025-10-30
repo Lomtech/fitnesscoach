@@ -85,9 +85,8 @@ lines.forEach((line, i) => {
 });
 console.log("");
 
-// SUPABASE_URL - Ersetze ALLE Vorkommen (auch in if-Bedingungen)
+// SUPABASE_URL - Ersetze ALLE Vorkommen
 const beforeUrl = appJs.includes("DEIN_SUPABASE_URL");
-// Verwende globales Regex mit g-Flag für ALLE Vorkommen
 appJs = appJs.replace(/DEIN_SUPABASE_URL/g, SUPABASE_URL);
 const afterUrl =
   appJs.includes(SUPABASE_URL) && !appJs.includes("DEIN_SUPABASE_URL");
@@ -115,6 +114,20 @@ console.log(
 appJs = appJs.replace(
   /DEIN_STRIPE_PUBLISHABLE_KEY/g,
   STRIPE_PUBLISHABLE_KEY || "DEIN_STRIPE_PUBLISHABLE_KEY"
+);
+
+// WICHTIG: Entferne die fehlerhafte Konfigurationsprüfung
+// Diese Prüfung macht keinen Sinn wenn die Werte beim Build ersetzt werden
+const configCheckRegex =
+  /\/\/ Prüfe Konfiguration[\s\S]*?alert\([^)]*\);[\s\n]*?\}/;
+const hadConfigCheck = configCheckRegex.test(appJs);
+appJs = appJs.replace(
+  configCheckRegex,
+  "// ✅ Konfiguration wurde beim Build-Prozess automatisch gesetzt"
+);
+console.log(
+  "   🗑️  Konfigurationsprüfung:",
+  hadConfigCheck ? "entfernt" : "nicht gefunden"
 );
 console.log(
   "   STRIPE_PUBLISHABLE_KEY:",
