@@ -287,7 +287,7 @@ const demoContent = {
       id: 1,
       title: "Übungskatalog Basics",
       description: "Alle grundlegenden Übungen",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       thumbnail:
         "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       requiredPlan: "basic",
@@ -296,7 +296,7 @@ const demoContent = {
       id: 2,
       title: "Anatomy Guide",
       description: "Muskelgruppen verstehen",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       thumbnail:
         "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       requiredPlan: "premium",
@@ -305,7 +305,7 @@ const demoContent = {
       id: 3,
       title: "Advanced Techniques",
       description: "Fortgeschrittene Trainingsmethoden",
-      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       thumbnail:
         "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/ChatGPT%20Image%2030.%20Okt.%202025,%2012_46_55.png",
       requiredPlan: "elite",
