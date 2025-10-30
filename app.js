@@ -76,7 +76,7 @@ const demoContent = {
       id: 2,
       title: "Core-Strengthening",
       description: "Intensives Bauchmuskeltraining",
-      url: "https://example.com/video2.mp4",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail: "https://via.placeholder.com/400x200/004e89/ffffff?text=Core",
       requiredPlan: "basic",
     },
@@ -110,7 +110,7 @@ const demoContent = {
       id: 1,
       title: "12-Wochen Trainingsplan",
       description: "Strukturierter Aufbauplan",
-      url: "https://example.com/doc1.pdf",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=12-Wochen",
       requiredPlan: "basic",
@@ -148,7 +148,7 @@ const demoContent = {
       id: 1,
       title: "Übungskatalog Basics",
       description: "Alle grundlegenden Übungen",
-      url: "https://via.placeholder.com/600x400/ff6b35/ffffff?text=%C3%9Cbungen+Basics",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=%C3%9Cbungen",
       requiredPlan: "basic",
