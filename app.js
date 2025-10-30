@@ -67,7 +67,7 @@ const demoContent = {
       id: 1,
       title: "Ganzkörper-Workout",
       description: "Komplettes 30-Minuten Training",
-      url: "https://example.com/video1.mp4",
+      url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
         "https://via.placeholder.com/400x200/ff6b35/ffffff?text=Ganzk%C3%B6rper",
       requiredPlan: "basic",
