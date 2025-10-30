@@ -117,18 +117,64 @@ appJs = appJs.replace(
 );
 
 // WICHTIG: Entferne die fehlerhafte Konfigurationsprüfung
-// Diese Prüfung macht keinen Sinn wenn die Werte beim Build ersetzt werden
-const configCheckRegex =
-  /\/\/ Prüfe Konfiguration[\s\S]*?alert\([^)]*\);[\s\n]*?\}/;
-const hadConfigCheck = configCheckRegex.test(appJs);
-appJs = appJs.replace(
-  configCheckRegex,
-  "// ✅ Konfiguration wurde beim Build-Prozess automatisch gesetzt"
-);
-console.log(
-  "   🗑️  Konfigurationsprüfung:",
-  hadConfigCheck ? "entfernt" : "nicht gefunden"
-);
+// Nach der Ersetzung enthält diese if-Bedingung die echten Werte, was sie sinnlos macht
+// Wir suchen nach dem Pattern mit bereits ersetzten Werten
+const codeLines = appJs.split("\n");
+let inConfigCheck = false;
+let configCheckStart = -1;
+let configCheckEnd = -1;
+
+// Finde den if-Block der die Konfiguration prüft
+for (let i = 0; i < codeLines.length; i++) {
+  const line = codeLines[i];
+
+  // Startzeile gefunden
+  if (
+    line.includes("Prüfe Konfiguration") ||
+    (line.includes("if") &&
+      line.includes("SUPABASE_URL") &&
+      line.includes("==="))
+  ) {
+    configCheckStart = i;
+    inConfigCheck = true;
+  }
+
+  // Endzeile gefunden (das schließende } nach alert)
+  if (
+    inConfigCheck &&
+    line.includes("alert") &&
+    line.includes("Credentials fehlen")
+  ) {
+    // Suche das schließende }
+    for (let j = i; j < Math.min(i + 5, codeLines.length); j++) {
+      if (codeLines[j].trim() === "}") {
+        configCheckEnd = j;
+        break;
+      }
+    }
+    break;
+  }
+}
+
+if (configCheckStart !== -1 && configCheckEnd !== -1) {
+  // Ersetze den kompletten Block durch einen Kommentar
+  const beforeLines = codeLines.slice(0, configCheckStart);
+  const afterLines = codeLines.slice(configCheckEnd + 1);
+  const replacement = [
+    "// ✅ Konfiguration wurde beim Build-Prozess automatisch gesetzt (siehe build.js)",
+  ];
+
+  appJs = [...beforeLines, ...replacement, ...afterLines].join("\n");
+  console.log(
+    `   🗑️  Konfigurationsprüfung entfernt (Zeilen ${configCheckStart + 1}-${
+      configCheckEnd + 1
+    })`
+  );
+} else {
+  console.log(
+    "   ℹ️  Konfigurationsprüfung nicht gefunden (möglicherweise bereits entfernt)"
+  );
+}
 console.log(
   "   STRIPE_PUBLISHABLE_KEY:",
   STRIPE_PUBLISHABLE_KEY ? "✅ ersetzt" : "⚠️ nicht gesetzt"
