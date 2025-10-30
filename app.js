@@ -159,7 +159,7 @@ const demoContent = {
       description: "Muskelgruppen verstehen",
       url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
-        "https://via.placeholder.com/400x200/004e89/ffffff?text=Anatomy",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
     },
     {
