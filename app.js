@@ -69,7 +69,7 @@ const demoContent = {
       description: "Komplettes 30-Minuten Training",
       url: "https://example.com/video1.mp4",
       thumbnail:
-        "https://via.placeholder.com/400x200/ff6b35/ffffff?text=Ganzk%C3%B6rper",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "basic",
     },
     {
@@ -77,7 +77,7 @@ const demoContent = {
       title: "Core-Strengthening",
       description: "Intensives Bauchmuskeltraining",
       url: "https://example.com/video2.mp4",
-      thumbnail: "https://via.placeholder.com/400x200/004e89/ffffff?text=Core",
+      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "basic",
     },
     {
@@ -85,7 +85,7 @@ const demoContent = {
       title: "HIIT Advanced",
       description: "Hochintensives Intervalltraining",
       url: "https://example.com/video3.mp4",
-      thumbnail: "https://via.placeholder.com/400x200/ff6b35/ffffff?text=HIIT",
+      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
     },
     {
@@ -93,7 +93,7 @@ const demoContent = {
       title: "Yoga & Mobility",
       description: "Flexibilität und Entspannung",
       url: "https://example.com/video4.mp4",
-      thumbnail: "https://via.placeholder.com/400x200/004e89/ffffff?text=Yoga",
+      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
     },
     {
@@ -101,7 +101,7 @@ const demoContent = {
       title: "Personal Training Session",
       description: "Exklusive 1:1 Trainingseinheit",
       url: "https://example.com/video5.mp4",
-      thumbnail: "https://via.placeholder.com/400x200/7b1fa2/ffffff?text=Elite",
+      thumbnail: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "elite",
     },
   ],
@@ -112,7 +112,7 @@ const demoContent = {
       description: "Strukturierter Aufbauplan",
       url: "https://example.com/doc1.pdf",
       thumbnail:
-        "https://via.placeholder.com/400x200/ff6b35/ffffff?text=12-Wochen",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "basic",
     },
     {
@@ -121,7 +121,7 @@ const demoContent = {
       description: "Detaillierter Meal-Plan mit Rezepten",
       url: "https://example.com/doc2.pdf",
       thumbnail:
-        "https://via.placeholder.com/400x200/004e89/ffffff?text=Ern%C3%A4hrung",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
     },
     {
@@ -130,7 +130,7 @@ const demoContent = {
       description: "Alles über Nahrungsergänzung",
       url: "https://example.com/doc3.pdf",
       thumbnail:
-        "https://via.placeholder.com/400x200/ff6b35/ffffff?text=Supplements",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "premium",
     },
     {
@@ -139,7 +139,7 @@ const demoContent = {
       description: "Individuell auf dich zugeschnitten",
       url: "https://example.com/doc4.pdf",
       thumbnail:
-        "https://via.placeholder.com/400x200/7b1fa2/ffffff?text=Personal",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "elite",
     },
   ],
@@ -150,7 +150,7 @@ const demoContent = {
       description: "Alle grundlegenden Übungen",
       url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
-        "https://via.placeholder.com/400x200/ff6b35/ffffff?text=%C3%9Cbungen",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "basic",
     },
     {
@@ -168,7 +168,7 @@ const demoContent = {
       description: "Fortgeschrittene Trainingsmethoden",
       url: "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/premium/IMG_3295.jpeg",
       thumbnail:
-        "https://via.placeholder.com/400x200/7b1fa2/ffffff?text=Advanced",
+        "https://ftohghotvfgkoeclmwfv.supabase.co/storage/v1/object/public/images/thumbnails/WhatsApp%20Image%202025-10-30%20at%2002.26.32.jpeg",
       requiredPlan: "elite",
     },
   ],
