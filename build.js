@@ -50,43 +50,43 @@ let appJs = fs.readFileSync(path.join(__dirname, "app.js"), "utf8");
 // Ersetze Platzhalter mit Environment Variables
 console.log("🔄 Ersetze Platzhalter mit Environment Variables...");
 
-// SUPABASE_URL - robuste Ersetzung
+// SUPABASE_URL - matcht sowohl " als auch '
 appJs = appJs.replace(
-  /const SUPABASE_URL = ['"]DEINE_SUPABASE_URL['"];?/,
-  `const SUPABASE_URL = '${SUPABASE_URL}';`
+  /const SUPABASE_URL = ["']DEINE_SUPABASE_URL["'];?/,
+  `const SUPABASE_URL = "${SUPABASE_URL}";`
 );
 console.log(
   "   SUPABASE_URL:",
   appJs.includes(SUPABASE_URL) ? "ersetzt ✓" : "FEHLER ✗"
 );
 
-// SUPABASE_ANON_KEY - robuste Ersetzung
+// SUPABASE_ANON_KEY - matcht sowohl " als auch '
 appJs = appJs.replace(
-  /const SUPABASE_ANON_KEY = ['"]DEIN_SUPABASE_ANON_KEY['"];?/,
-  `const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';`
+  /const SUPABASE_ANON_KEY = ["']DEIN_SUPABASE_ANON_KEY["'];?/,
+  `const SUPABASE_ANON_KEY = "${SUPABASE_ANON_KEY}";`
 );
 console.log(
   "   SUPABASE_ANON_KEY:",
   appJs.includes(SUPABASE_ANON_KEY) ? "ersetzt ✓" : "FEHLER ✗"
 );
 
-// STRIPE_PUBLISHABLE_KEY
+// STRIPE_PUBLISHABLE_KEY - matcht sowohl " als auch '
 appJs = appJs.replace(
-  /const STRIPE_PUBLISHABLE_KEY = ['"]DEIN_STRIPE_PUBLISHABLE_KEY['"];?/,
-  `const STRIPE_PUBLISHABLE_KEY = '${
+  /const STRIPE_PUBLISHABLE_KEY = ["']DEIN_STRIPE_PUBLISHABLE_KEY["'];?/,
+  `const STRIPE_PUBLISHABLE_KEY = "${
     STRIPE_PUBLISHABLE_KEY || "DEIN_STRIPE_PUBLISHABLE_KEY"
-  }';`
+  }";`
 );
 console.log(
   "   STRIPE_PUBLISHABLE_KEY:",
   STRIPE_PUBLISHABLE_KEY ? "ersetzt ✓" : "nicht gesetzt ⚠"
 );
 
-// Ersetze Price IDs
+// Ersetze Price IDs - matcht sowohl " als auch '
 if (STRIPE_PRICE_BASIC) {
   appJs = appJs.replace(
-    /basic: ['"]price_BASIC_ID['"],?/,
-    `basic: '${STRIPE_PRICE_BASIC}',`
+    /basic: ["']price_BASIC_ID["'],?/,
+    `basic: "${STRIPE_PRICE_BASIC}",`
   );
   console.log("   STRIPE_PRICE_BASIC: ersetzt ✓");
 } else {
@@ -95,8 +95,8 @@ if (STRIPE_PRICE_BASIC) {
 
 if (STRIPE_PRICE_PREMIUM) {
   appJs = appJs.replace(
-    /premium: ['"]price_PREMIUM_ID['"],?/,
-    `premium: '${STRIPE_PRICE_PREMIUM}',`
+    /premium: ["']price_PREMIUM_ID["'],?/,
+    `premium: "${STRIPE_PRICE_PREMIUM}",`
   );
   console.log("   STRIPE_PRICE_PREMIUM: ersetzt ✓");
 } else {
@@ -105,8 +105,8 @@ if (STRIPE_PRICE_PREMIUM) {
 
 if (STRIPE_PRICE_ELITE) {
   appJs = appJs.replace(
-    /elite: ['"]price_ELITE_ID['"],?/,
-    `elite: '${STRIPE_PRICE_ELITE}'`
+    /elite: ["']price_ELITE_ID["']/,
+    `elite: "${STRIPE_PRICE_ELITE}"`
   );
   console.log("   STRIPE_PRICE_ELITE: ersetzt ✓");
 } else {
@@ -138,11 +138,11 @@ console.log("✅ app.js erstellt");
 // Lese success.html und ersetze Credentials
 let successHtml = fs.readFileSync(path.join(__dirname, "success.html"), "utf8");
 successHtml = successHtml.replace(
-  "const SUPABASE_URL = 'DEINE_SUPABASE_URL';",
+  /const SUPABASE_URL = ["']DEINE_SUPABASE_URL["'];?/,
   `const SUPABASE_URL = '${SUPABASE_URL}';`
 );
 successHtml = successHtml.replace(
-  "const SUPABASE_ANON_KEY = 'DEIN_SUPABASE_ANON_KEY';",
+  /const SUPABASE_ANON_KEY = ["']DEIN_SUPABASE_ANON_KEY["'];?/,
   `const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';`
 );
 
