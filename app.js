@@ -64,7 +64,7 @@ if (
   );
 }
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_key);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 debugLog("Supabase initialisiert:", {
   url: SUPABASE_URL,
