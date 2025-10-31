@@ -1,5 +1,5 @@
 // ============================================
-// EINFACHES BUILD-SCRIPT - FittiCoach
+// EINFACHES BUILD-SCRIPT - FittiCoach1
 // ============================================
 const fs = require("fs");
 const path = require("path");
