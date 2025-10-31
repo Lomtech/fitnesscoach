@@ -32,6 +32,97 @@
     <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
+    <!-- ADMIN BEREICH (nur sichtbar für Coaches/Admins) -->
+    <div
+      id="adminArea"
+      style="
+        display: none;
+        padding: 2rem;
+        background: #f9f9f9;
+        margin-top: 2rem;
+        border-top: 3px solid var(--primary);
+      "
+    >
+      <h2>🛠️ Coach-Admin-Bereich</h2>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="adminUsers">
+          Nutzer & Pläne
+        </button>
+        <button class="tab-btn" data-tab="adminPayments">Zahlungen</button>
+        <button class="tab-btn" data-tab="adminContent">
+          Inhalte verwalten
+        </button>
+      </div>
+
+      <!-- Tab: Nutzer & Pläne -->
+      <div id="adminUsers" class="tab-content active">
+        <h3>Nutzerübersicht</h3>
+        <input
+          type="text"
+          id="searchUsers"
+          placeholder="Suche nach Name oder E-Mail..."
+          style="width: 100%; padding: 0.5rem; margin-bottom: 1rem"
+        />
+        <div id="usersTableContainer"></div>
+      </div>
+
+      <!-- Tab: Zahlungen -->
+      <div id="adminPayments" class="tab-content">
+        <h3>Zahlungsübersicht</h3>
+        <div id="paymentsTableContainer"></div>
+      </div>
+
+      <!-- Tab: Inhalte verwalten -->
+      <div id="adminContent" class="tab-content">
+        <h3>Inhalte hochladen & verwalten</h3>
+        <form id="uploadContentForm">
+          <div class="form-group">
+            <label>Titel</label>
+            <input type="text" name="title" required />
+          </div>
+          <div class="form-group">
+            <label>Beschreibung</label>
+            <textarea name="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Datei (Video, PDF, Bild)</label>
+            <input
+              type="file"
+              name="file"
+              accept="video/*,application/pdf,image/*"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Thumbnail (optional)</label>
+            <input type="file" name="thumbnail" accept="image/*" />
+          </div>
+          <div class="form-group">
+            <label>Typ</label>
+            <select name="type" required>
+              <option value="video">Video</option>
+              <option value="document">Dokument</option>
+              <option value="image">Bild</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Erforderlicher Plan</label>
+            <select name="required_plan" required>
+              <option value="basic">Basis</option>
+              <option value="premium">Premium</option>
+              <option value="elite">Elite</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Hochladen</button>
+        </form>
+
+        <hr />
+        <h4>Vorhandene Inhalte</h4>
+        <div id="existingContentList"></div>
+      </div>
+    </div>
     <!-- Cookie Consent Banner -->
     <div id="cookieConsent" class="cookie-banner" style="display: none">
       <div class="cookie-content">
