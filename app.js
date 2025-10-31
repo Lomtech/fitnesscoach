@@ -1,7 +1,7 @@
 // ============================================
 // CODE-GLIEDERUNG (Übersicht für schnelle Navigation)
 // ============================================
-// Suche im Code nach: "// >>> GLIEDERUNGSPUNKT X: BEZEICHNUNG"
+// Suche im Code nach: "// ()>>> GLIEDERUNGSPUNKT X: BEZEICHNUNG"
 //
 // 1. KONFIGURATION (Supabase & Stripe)
 // 2. GLOBALE VARIABLEN & HILFSFUNKTIONEN
